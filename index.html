@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Diagrama de Árbol de Decisión – Cuestionario PHQ-9</title>
+    <style>
+      :root {
+        --navy: #0d1f3d;
+        --navy-deep: #09172d;
+        --green: #1d8f5f;
+        --green-deep: #146b49;
+        --green-soft: #ebf8f1;
+        --blue-soft: #edf4ff;
+        --gray-50: #f8fafc;
+        --gray-100: #eef3f7;
+        --gray-200: #dfe7ee;
+        --gray-500: #5d6d7b;
+        --gray-700: #2d3748;
+        --danger: #b42318;
+        --danger-soft: #fff1f2;
+        --shadow: 0 18px 40px rgba(8, 22, 43, 0.18);
+      }
+
+      * { box-sizing: border-box; }
+      html { scroll-behavior: smooth; }
+      body {
+        margin: 0;
+        min-height: 100vh;
+        font-family: Arial, Helvetica, sans-serif;
+        background:
+          radial-gradient(circle at top left, rgba(106, 160, 255, 0.18), transparent 24%),
+          radial-gradient(circle at bottom right, rgba(15, 52, 92, 0.6), transparent 30%),
+          linear-gradient(135deg, #030608 0%, #0d1321 25%, #101c2f 52%, #0a1d36 100%);
+        color: var(--gray-700);
+        line-height: 1.6;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 28px 18px 48px;
+      }
+
+      .page-shell {
+        background: linear-gradient(180deg, rgba(12, 18, 29, 0.88), rgba(16, 23, 35, 0.9));
+        border: 1px solid rgba(148, 170, 199, 0.2);
+        border-radius: 24px;
+        box-shadow: 0 22px 48px rgba(0, 0, 0, 0.42);
+        backdrop-filter: blur(10px);
+        padding: 30px;
+      }
+
+      .topbar {
+        background: linear-gradient(135deg, var(--navy) 0%, var(--navy-deep) 100%);
+        color: #fff;
+        border-radius: 22px;
+        padding: 26px 24px 18px;
+        box-shadow: 0 16px 35px rgba(13, 31, 61, 0.25);
+      }
+
+      .topbar-head {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 18px;
+        flex-wrap: wrap;
+      }
+
+      .eyebrow {
+        margin: 0 0 8px;
+        color: rgba(255,255,255,0.8);
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        font-size: 0.74rem;
+        font-weight: 700;
+      }
+
+      h1 {
+        margin: 0;
+        font-size: clamp(2rem, 1.7rem + 1vw, 3rem);
+        line-height: 1.2;
+      }
+
+      .institution-badge {
+        min-width: 118px;
+        background: rgba(255,255,255,0.08);
+        border: 1px solid rgba(255,255,255,0.14);
+        border-radius: 16px;
+        padding: 12px 14px;
+        text-align: center;
+      }
+
+      .institution-badge strong {
+        display: block;
+        font-size: 1.3rem;
+        letter-spacing: 0.08em;
+      }
+
+      .institution-badge span {
+        font-size: 0.72rem;
+        opacity: 0.8;
+      }
+
+      .meta-grid {
+        margin-top: 18px;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 12px;
+      }
+
+      .meta-item {
+        background: rgba(255,255,255,0.06);
+        border: 1px solid rgba(255,255,255,0.1);
+        border-radius: 12px;
+        padding: 12px 14px;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+      }
+
+      .meta-item span {
+        display: block;
+        font-size: 0.73rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        opacity: 0.8;
+      }
+
+      .meta-item strong {
+        display: block;
+        margin-top: 8px;
+        font-size: 0.96rem;
+        line-height: 1.5;
+      }
+
+      .team-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 6px;
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: 10px;
+        overflow: hidden;
+        table-layout: fixed;
+      }
+
+      .team-table th,
+      .team-table td {
+        text-align: left;
+        padding: 5px 8px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        vertical-align: middle;
+      }
+
+      .team-table thead th {
+        background: rgba(255, 255, 255, 0.08);
+        color: rgba(255, 255, 255, 0.95);
+        font-size: 0.62rem;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        padding-top: 7px;
+        padding-bottom: 7px;
+      }
+
+      .team-table tbody td {
+        color: rgba(255, 255, 255, 0.96);
+        font-size: 0.72rem;
+        line-height: 1.2;
+      }
+
+      .team-table tbody td:last-child {
+        width: 26%;
+        text-align: right;
+        white-space: nowrap;
+      }
+
+      .team-table tbody tr:last-child td {
+        border-bottom: none;
+      }
+
+      .hero {
+        margin-top: 26px;
+        display: grid;
+        grid-template-columns: 1.3fr 0.9fr;
+        gap: 24px;
+        align-items: stretch;
+      }
+
+      .panel {
+        background: rgba(255,255,255,0.8);
+        border: 1px solid rgba(13,31,61,0.08);
+        border-radius: 22px;
+        padding: 26px 24px;
+        box-shadow: 0 15px 36px rgba(13,31,61,0.08);
+      }
+
+      .hero-copy h2 {
+        margin: 0 0 12px;
+        color: var(--navy);
+        font-size: clamp(2rem, 1.5rem + 1vw, 2.8rem);
+      }
+
+      .lead {
+        margin: 0 0 18px;
+        color: var(--gray-700);
+        font-size: 1.06rem;
+      }
+
+      .feature-list {
+        margin: 0;
+        padding-left: 22px;
+        color: var(--gray-700);
+      }
+
+      .feature-list li + li {
+        margin-top: 8px;
+      }
+
+      .cta-stack {
+        margin-top: 22px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+      }
+
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        text-decoration: none;
+        border: none;
+        border-radius: 14px;
+        padding: 15px 24px;
+        font-weight: 700;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+      }
+
+      .btn:hover, .btn:focus-visible {
+        transform: translateY(-1px);
+      }
+
+      .btn-primary {
+        background: linear-gradient(135deg, var(--green) 0%, var(--green-deep) 100%);
+        color: #fff;
+        box-shadow: 0 12px 22px rgba(29, 143, 95, 0.25);
+      }
+
+      .btn-secondary {
+        background: linear-gradient(135deg, var(--navy) 0%, #17395e 100%);
+        color: #fff;
+        box-shadow: 0 12px 22px rgba(13, 31, 61, 0.2);
+      }
+
+      .mini-card {
+        background: linear-gradient(180deg, #f5fbff 0%, #eefaf4 100%);
+        border: 1px solid rgba(29, 143, 95, 0.15);
+        border-radius: 20px;
+        padding: 20px;
+      }
+
+      .mini-card h3 {
+        margin: 0 0 12px;
+        color: var(--navy);
+        font-size: 1.15rem;
+      }
+
+      .stat-box {
+        background: rgba(13,31,61,0.04);
+        border: 1px solid rgba(13,31,61,0.08);
+        border-radius: 14px;
+        padding: 14px 16px;
+        margin-bottom: 12px;
+      }
+
+      .stat-box strong {
+        display: block;
+        font-size: 1.7rem;
+        color: var(--navy);
+        line-height: 1;
+      }
+
+      .stat-box span {
+        display: block;
+        margin-top: 6px;
+        color: var(--gray-500);
+      }
+
+      .info-grid {
+        margin-top: 24px;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 18px;
+      }
+
+      .info-card {
+        background: rgba(255,255,255,0.8);
+        border: 1px solid rgba(13,31,61,0.08);
+        border-radius: 16px;
+        padding: 20px;
+      }
+
+      .info-card h3 {
+        margin: 0 0 8px;
+        color: var(--navy);
+      }
+
+      .info-card p {
+        margin: 0;
+        color: var(--gray-700);
+      }
+
+      @media (max-width: 860px) {
+        .hero { grid-template-columns: 1fr; }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="page-shell">
+        <header class="topbar">
+          <div class="topbar-head">
+            <div>
+              <p class="eyebrow">Universidad Autónoma de Nuevo León</p>
+              <h1>Diagrama de Árbol de Decisión – Cuestionario PHQ-9</h1>
+            </div>
+            <div class="institution-badge" aria-label="Seminario de Sistemas">
+              <strong>SEM</strong>
+              <span>Seminario</span>
+            </div>
+          </div>
+
+          <div class="meta-grid">
+            <div class="meta-item">
+              <span>Facultad</span>
+              <strong>Facultad de Ingeniería Mecánica y Eléctrica</strong>
+            </div>
+            <div class="meta-item">
+              <span>Materia</span>
+              <strong>Seminario de Sistemas</strong>
+            </div>
+            <div class="meta-item">
+              <span>Equipo</span>
+              <table class="team-table" aria-label="Integrantes del equipo">
+                <thead>
+                  <tr>
+                    <th>Miembros del Equipo</th>
+                    <th>Matrícula</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr><td>Héctor Abiud Garza Torres</td><td>2104536</td></tr>
+                  <tr><td>Jesús Alberto Cabrera García</td><td>2053522</td></tr>
+                  <tr><td>Diego Ernesto Tristán González</td><td>2121582</td></tr>
+                  <tr><td>Jesús Alejandro Vázquez Domínguez</td><td>2015101</td></tr>
+                  <tr><td>Alberto Alexander Villegas Rodríguez</td><td>2173861</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="meta-item">
+              <span>Salón / Grupo</span>
+              <strong>4110 / 003 - Hora: M6</strong>
+            </div>
+          </div>
+        </header>
+
+        <main class="hero">
+          <section class="panel hero-copy">
+            <h2>Encuesta de salud mental</h2>
+            <p class="lead">La evaluación PHQ-9 ayuda a identificar el nivel de síntomas depresivos durante las últimas 2 semanas, con un enfoque académico y orientativo.</p>
+            <ul class="feature-list">
+              <li>9 preguntas con respuesta obligatoria.</li>
+              <li>Cálculo automático del puntaje total y clasificación.</li>
+              <li>Árbol de decisión con interpretación visual.</li>
+              <li>Indicador de riesgo clínico si la pregunta 9 es positiva.</li>
+            </ul>
+            <div class="cta-stack">
+              <a href="encuesta.html" class="btn btn-primary">Iniciar encuesta</a>
+              <a href="resultado.html" class="btn btn-secondary">Ver resultado de ejemplo</a>
+            </div>
+          </section>
+
+          <aside class="mini-card" aria-label="Resumen previo">
+            <h3>Resumen</h3>
+            <div class="stat-box">
+              <strong>9</strong>
+              <span>Preguntas</span>
+            </div>
+            <div class="stat-box">
+              <strong>0 – 27</strong>
+              <span>Rango de puntaje</span>
+            </div>
+            <div class="stat-box">
+              <strong>5</strong>
+              <span>Niveles de clasificación</span>
+            </div>
+          </aside>
+        </main>
+
+        <section class="info-grid">
+          <article class="info-card">
+            <h3>Escala</h3>
+            <p>0 = Nunca, 1 = Varios días, 2 = Más de la mitad de los días, 3 = Casi todos los días.</p>
+          </article>
+          <article class="info-card">
+            <h3>Clasificación</h3>
+            <p>Se interpreta según el total de la suma: mínimo, leve, moderada, moderadamente severa y severa.</p>
+          </article>
+          <article class="info-card">
+            <h3>Riesgo clínico</h3>
+            <p>Si la respuesta a la pregunta 9 es mayor a 0, se activa una alerta de valoración inmediata.</p>
+          </article>
+        </section>
+      </div>
+    </div>
+  </body>
+</html>

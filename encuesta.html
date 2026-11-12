@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Encuesta PHQ-9</title>
+    <style>
+      :root {
+        --navy: #0d1f3d;
+        --navy-deep: #09172d;
+        --green: #1d8f5f;
+        --green-deep: #146b49;
+        --green-soft: #ebf8f1;
+        --gray-50: #f8fafc;
+        --gray-100: #eef3f7;
+        --gray-200: #dfe7ee;
+        --gray-500: #5d6d7b;
+        --gray-700: #2d3748;
+        --warning: #ffedd5;
+        --warning-text: #7a4500;
+        --danger: #b42318;
+        --danger-soft: #fff1f2;
+        --shadow: 0 20px 45px rgba(8, 22, 43, 0.12);
+      }
+
+      * { box-sizing: border-box; }
+      html { scroll-behavior: smooth; }
+      body {
+        margin: 0;
+        min-height: 100vh;
+        font-family: Arial, Helvetica, sans-serif;
+        background:
+          radial-gradient(circle at top left, rgba(112, 146, 255, 0.18), transparent 26%),
+          radial-gradient(circle at bottom right, rgba(14, 38, 62, 0.7), transparent 32%),
+          linear-gradient(135deg, #030608 0%, #0c1118 20%, #0d1624 42%, #0a1d36 100%);
+        color: var(--gray-700);
+        line-height: 1.6;
+      }
+
+      .container {
+        max-width: 1180px;
+        margin: 0 auto;
+        padding: 24px 16px 56px;
+      }
+
+      .topbar {
+        background: linear-gradient(135deg, rgba(9, 17, 28, 0.96) 0%, rgba(16, 31, 53, 0.94) 100%);
+        color: #fff;
+        border-radius: 22px;
+        padding: 20px 24px 16px;
+        box-shadow: 0 18px 40px rgba(0, 0, 0, 0.38);
+        border: 1px solid rgba(167, 188, 214, 0.18);
+      }
+
+      .topbar-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 16px;
+        flex-wrap: wrap;
+      }
+
+      .eyebrow {
+        margin: 0 0 8px;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        font-size: 0.74rem;
+        opacity: 0.8;
+        font-weight: 700;
+      }
+
+      h1 {
+        margin: 0;
+        font-size: clamp(1.9rem, 1.4rem + 1vw, 2.8rem);
+        line-height: 1.2;
+      }
+
+      .institution-badge {
+        min-width: 120px;
+        background: rgba(255,255,255,0.07);
+        border: 1px solid rgba(255,255,255,0.12);
+        border-radius: 14px;
+        text-align: center;
+        padding: 12px 14px;
+      }
+
+      .institution-badge strong {
+        display: block;
+        font-size: 1.3rem;
+        letter-spacing: 0.08em;
+      }
+
+      .institution-badge span {
+        display: block;
+        margin-top: 4px;
+        font-size: 0.72rem;
+        opacity: 0.8;
+      }
+
+      .meta-grid {
+        margin-top: 18px;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 12px;
+      }
+
+      .meta-item {
+        background: rgba(255,255,255,0.06);
+        border: 1px solid rgba(255,255,255,0.1);
+        border-radius: 12px;
+        padding: 12px 14px;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+      }
+
+      .meta-item span {
+        display: block;
+        font-size: 0.73rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        opacity: 0.8;
+      }
+
+      .meta-item strong {
+        display: block;
+        margin-top: 8px;
+        font-size: 0.96rem;
+        line-height: 1.5;
+      }
+
+      .team-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 6px;
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: 10px;
+        overflow: hidden;
+        table-layout: fixed;
+      }
+
+      .team-table th,
+      .team-table td {
+        text-align: left;
+        padding: 5px 8px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        vertical-align: middle;
+      }
+
+      .team-table thead th {
+        background: rgba(255, 255, 255, 0.08);
+        color: rgba(255, 255, 255, 0.95);
+        font-size: 0.62rem;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        padding-top: 7px;
+        padding-bottom: 7px;
+      }
+
+      .team-table tbody td {
+        color: rgba(255, 255, 255, 0.96);
+        font-size: 0.72rem;
+        line-height: 1.2;
+      }
+
+      .team-table tbody td:last-child {
+        width: 26%;
+        text-align: right;
+        white-space: nowrap;
+      }
+
+      .team-table tbody tr:last-child td {
+        border-bottom: none;
+      }
+
+      .card {
+        margin-top: 24px;
+        background: linear-gradient(180deg, rgba(15, 21, 32, 0.9), rgba(12, 18, 29, 0.92));
+        border: 1px solid rgba(167, 188, 214, 0.18);
+        border-radius: 22px;
+        box-shadow: 0 18px 42px rgba(0, 0, 0, 0.28);
+        padding: 24px;
+      }
+
+      .section-head {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 16px;
+        flex-wrap: wrap;
+        margin-bottom: 18px;
+      }
+
+      h2 {
+        margin: 0;
+        color: var(--navy);
+        font-size: clamp(1.5rem, 1.2rem + 0.8vw, 2rem);
+      }
+
+      .instructions {
+        background: linear-gradient(135deg, #edf5ff 0%, #eefaf4 100%);
+        border-left: 6px solid var(--green);
+        border-radius: 14px;
+        padding: 16px 18px;
+      }
+
+      .instructions p {
+        margin: 0;
+        font-size: 1.02rem;
+        font-weight: 700;
+      }
+
+      .scale-list {
+        list-style: none;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        padding: 0;
+        margin: 14px 0 0;
+      }
+
+      .scale-list li {
+        background: #fff;
+        border: 1px solid rgba(13,31,61,0.08);
+        border-radius: 10px;
+        padding: 7px 11px;
+        font-weight: 700;
+        color: var(--navy);
+      }
+
+      .progress-wrap {
+        margin-top: 20px;
+        display: grid;
+        gap: 8px;
+      }
+
+      .progress-meta {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 8px;
+        font-weight: 700;
+        color: var(--navy);
+      }
+
+      .progress-bar {
+        width: 100%;
+        height: 14px;
+        border-radius: 999px;
+        overflow: hidden;
+        background: var(--gray-100);
+        border: 1px solid rgba(13,31,61,0.08);
+      }
+
+      .progress-fill {
+        width: 0%;
+        height: 100%;
+        background: linear-gradient(90deg, var(--green) 0%, var(--navy) 100%);
+        border-radius: inherit;
+        transition: width 0.25s ease;
+      }
+
+      .survey-form {
+        margin-top: 22px;
+      }
+
+      .question {
+        border: 1px solid rgba(13,31,61,0.08);
+        border-radius: 16px;
+        background: #fff;
+        padding: 18px 18px 14px;
+        margin-bottom: 18px;
+      }
+
+      .question-header {
+        display: flex;
+        gap: 12px;
+        align-items: flex-start;
+        margin-bottom: 14px;
+      }
+
+      .question-number {
+        width: 38px;
+        height: 38px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        background: linear-gradient(135deg, var(--navy) 0%, #1a3b63 100%);
+        color: #fff;
+        font-weight: 800;
+      }
+
+      .question-text {
+        margin: 0;
+        font-size: 1.02rem;
+        font-weight: 700;
+        color: var(--gray-700);
+      }
+
+      .options {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+        gap: 10px;
+      }
+
+      .option {
+        position: relative;
+        display: block;
+        border: 1px solid rgba(13,31,61,0.08);
+        border-radius: 12px;
+        background: var(--gray-50);
+        transition: all 0.2s ease;
+      }
+
+      .option:hover, .option:focus-within {
+        border-color: rgba(13,31,61,0.2);
+        box-shadow: 0 0 0 2px rgba(13,31,61,0.08);
+      }
+
+      .option input {
+        position: absolute;
+        inset: 0;
+        opacity: 0;
+        cursor: pointer;
+      }
+
+      .option label {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 54px;
+        padding: 8px 12px;
+        font-weight: 700;
+        text-align: center;
+        pointer-events: none;
+      }
+
+      .option input:checked + label {
+        background: linear-gradient(135deg, var(--navy) 0%, #183f63 100%);
+        color: #fff;
+        border-radius: 12px;
+      }
+
+      .option input:focus-visible + label {
+        outline: 3px solid rgba(29, 143, 95, 0.35);
+        outline-offset: 2px;
+      }
+
+      .status-message {
+        display: none;
+        margin-top: 14px;
+        background: var(--warning);
+        color: var(--warning-text);
+        border: 1px solid rgba(122, 69, 0, 0.14);
+        border-radius: 12px;
+        padding: 12px 14px;
+        font-weight: 700;
+      }
+
+      .status-message.visible {
+        display: block;
+      }
+
+      .actions {
+        margin-top: 22px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+        flex-wrap: wrap;
+      }
+
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border: none;
+        border-radius: 12px;
+        padding: 14px 22px;
+        font-weight: 700;
+        font-size: 1rem;
+        cursor: pointer;
+        text-decoration: none;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+      }
+
+      .btn:hover, .btn:focus-visible {
+        transform: translateY(-1px);
+      }
+
+      .btn-primary {
+        background: linear-gradient(135deg, var(--green) 0%, var(--green-deep) 100%);
+        color: #fff;
+        box-shadow: 0 10px 20px rgba(29, 143, 95, 0.2);
+      }
+
+      .btn-secondary {
+        background: linear-gradient(135deg, var(--navy) 0%, #183b62 100%);
+        color: #fff;
+        box-shadow: 0 10px 20px rgba(13,31,61,0.18);
+      }
+
+      @media (max-width: 760px) {
+        .actions { flex-direction: column; align-items: stretch; }
+        .btn { width: 100%; }
+        .question-header { flex-direction: column; }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <header class="topbar">
+        <div class="topbar-head">
+          <div>
+            <p class="eyebrow">Universidad Autónoma de Nuevo León</p>
+            <h1>Diagrama de Árbol de Decisión – Cuestionario PHQ-9</h1>
+          </div>
+          <div class="institution-badge" aria-label="Seminario de Sistemas">
+            <strong>SEM</strong>
+            <span>Seminario</span>
+          </div>
+        </div>
+
+        <div class="meta-grid">
+          <div class="meta-item">
+            <span>Facultad</span>
+            <strong>Facultad de Ingeniería Mecánica y Eléctrica</strong>
+          </div>
+          <div class="meta-item">
+            <span>Seminario</span>
+            <strong>Seminario de Sistemas</strong>
+          </div>
+          <div class="meta-item">
+            <span>Equipo</span>
+            <table class="team-table" aria-label="Integrantes del equipo">
+              <thead>
+                <tr>
+                  <th>Miembros del Equipo</th>
+                  <th>Matrícula</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td>Héctor Abiud Garza Torres</td><td>2104536</td></tr>
+                <tr><td>Jesús Alberto Cabrera García</td><td>2053522</td></tr>
+                <tr><td>Diego Ernesto Tristán González</td><td>2121582</td></tr>
+                <tr><td>Jesús Alejandro Vázquez Domínguez</td><td>2015101</td></tr>
+                <tr><td>Alberto Alexander Villegas Rodríguez</td><td>2173861</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="meta-item">
+            <span>Salón / Grupo</span>
+            <strong>4110 / 003 - Hora: M6</strong>
+          </div>
+        </div>
+      </header>
+
+      <main class="card">
+        <div class="section-head">
+          <h2>Encuesta de salud mental</h2>
+          <a href="index.html" class="btn btn-secondary">Volver al inicio</a>
+        </div>
+
+        <div class="instructions" aria-live="polite">
+          <p>Durante las últimas 2 semanas, ¿qué tan seguido le han molestado los siguientes problemas?</p>
+          <ul class="scale-list" aria-label="Escala de respuesta">
+            <li>0 = Nunca</li>
+            <li>1 = Varios días</li>
+            <li>2 = Más de la mitad de los días</li>
+            <li>3 = Casi todos los días</li>
+          </ul>
+        </div>
+
+        <div class="progress-wrap" aria-live="polite" aria-atomic="true">
+          <div class="progress-meta">
+            <span>Progreso de la encuesta</span>
+            <span id="progressText">0/9 respondidas</span>
+          </div>
+          <div class="progress-bar" aria-hidden="true">
+            <div id="progressFill" class="progress-fill"></div>
+          </div>
+        </div>
+
+        <form id="surveyForm" class="survey-form" novalidate>
+          <div class="question">
+            <div class="question-header">
+              <div class="question-number" aria-hidden="true">1</div>
+              <p class="question-text">Poco interés o placer en hacer las cosas.</p>
+            </div>
+            <div class="options" role="radiogroup" aria-label="Pregunta 1: Poco interés o placer en hacer las cosas.">
+              <div class="option"><input type="radio" id="q1-0" name="q1" value="0" required /><label for="q1-0">0 - Nunca</label></div>
+              <div class="option"><input type="radio" id="q1-1" name="q1" value="1" /><label for="q1-1">1 - Varios días</label></div>
+              <div class="option"><input type="radio" id="q1-2" name="q1" value="2" /><label for="q1-2">2 - Más de la mitad</label></div>
+              <div class="option"><input type="radio" id="q1-3" name="q1" value="3" /><label for="q1-3">3 - Casi todos los días</label></div>
+            </div>
+          </div>
+
+          <div class="question">
+            <div class="question-header">
+              <div class="question-number" aria-hidden="true">2</div>
+              <p class="question-text">Se ha sentido decaído(a), deprimido(a) o sin esperanzas.</p>
+            </div>
+            <div class="options" role="radiogroup" aria-label="Pregunta 2: Se ha sentido decaído(a), deprimido(a) o sin esperanzas.">
+              <div class="option"><input type="radio" id="q2-0" name="q2" value="0" required /><label for="q2-0">0 - Nunca</label></div>
+              <div class="option"><input type="radio" id="q2-1" name="q2" value="1" /><label for="q2-1">1 - Varios días</label></div>
+              <div class="option"><input type="radio" id="q2-2" name="q2" value="2" /><label for="q2-2">2 - Más de la mitad</label></div>
+              <div class="option"><input type="radio" id="q2-3" name="q2" value="3" /><label for="q2-3">3 - Casi todos los días</label></div>
+            </div>
+          </div>
+
+          <div class="question">
+            <div class="question-header">
+              <div class="question-number" aria-hidden="true">3</div>
+              <p class="question-text">Dificultad para dormirse o permanecer dormido(a), o ha dormido demasiado.</p>
+            </div>
+            <div class="options" role="radiogroup" aria-label="Pregunta 3: Dificultad para dormirse o permanecer dormido(a), o ha dormido demasiado.">
+              <div class="option"><input type="radio" id="q3-0" name="q3" value="0" required /><label for="q3-0">0 - Nunca</label></div>
+              <div class="option"><input type="radio" id="q3-1" name="q3" value="1" /><label for="q3-1">1 - Varios días</label></div>
+              <div class="option"><input type="radio" id="q3-2" name="q3" value="2" /><label for="q3-2">2 - Más de la mitad</label></div>
+              <div class="option"><input type="radio" id="q3-3" name="q3" value="3" /><label for="q3-3">3 - Casi todos los días</label></div>
+            </div>
+          </div>
+
+          <div class="question">
+            <div class="question-header">
+              <div class="question-number" aria-hidden="true">4</div>
+              <p class="question-text">Se ha sentido cansado(a) o con poca energía.</p>
+            </div>
+            <div class="options" role="radiogroup" aria-label="Pregunta 4: Se ha sentido cansado(a) o con poca energía.">
+              <div class="option"><input type="radio" id="q4-0" name="q4" value="0" required /><label for="q4-0">0 - Nunca</label></div>
+              <div class="option"><input type="radio" id="q4-1" name="q4" value="1" /><label for="q4-1">1 - Varios días</label></div>
+              <div class="option"><input type="radio" id="q4-2" name="q4" value="2" /><label for="q4-2">2 - Más de la mitad</label></div>
+              <div class="option"><input type="radio" id="q4-3" name="q4" value="3" /><label for="q4-3">3 - Casi todos los días</label></div>
+            </div>
+          </div>
+
+          <div class="question">
+            <div class="question-header">
+              <div class="question-number" aria-hidden="true">5</div>
+              <p class="question-text">Poco apetito o ha comido en exceso.</p>
+            </div>
+            <div class="options" role="radiogroup" aria-label="Pregunta 5: Poco apetito o ha comido en exceso.">
+              <div class="option"><input type="radio" id="q5-0" name="q5" value="0" required /><label for="q5-0">0 - Nunca</label></div>
+              <div class="option"><input type="radio" id="q5-1" name="q5" value="1" /><label for="q5-1">1 - Varios días</label></div>
+              <div class="option"><input type="radio" id="q5-2" name="q5" value="2" /><label for="q5-2">2 - Más de la mitad</label></div>
+              <div class="option"><input type="radio" id="q5-3" name="q5" value="3" /><label for="q5-3">3 - Casi todos los días</label></div>
+            </div>
+          </div>
+
+          <div class="question">
+            <div class="question-header">
+              <div class="question-number" aria-hidden="true">6</div>
+              <p class="question-text">Se ha sentido mal consigo mismo(a), o que es un(a) fracasado(a) o que se ha fallado a sí mismo(a) o a su familia.</p>
+            </div>
+            <div class="options" role="radiogroup" aria-label="Pregunta 6: Se ha sentido mal consigo mismo(a), o que es un(a) fracasado(a) o que se ha fallado a sí mismo(a) o a su familia.">
+              <div class="option"><input type="radio" id="q6-0" name="q6" value="0" required /><label for="q6-0">0 - Nunca</label></div>
+              <div class="option"><input type="radio" id="q6-1" name="q6" value="1" /><label for="q6-1">1 - Varios días</label></div>
+              <div class="option"><input type="radio" id="q6-2" name="q6" value="2" /><label for="q6-2">2 - Más de la mitad</label></div>
+              <div class="option"><input type="radio" id="q6-3" name="q6" value="3" /><label for="q6-3">3 - Casi todos los días</label></div>
+            </div>
+          </div>
+
+          <div class="question">
+            <div class="question-header">
+              <div class="question-number" aria-hidden="true">7</div>
+              <p class="question-text">Dificultad para concentrarse en cosas tales como leer el periódico o ver la televisión.</p>
+            </div>
+            <div class="options" role="radiogroup" aria-label="Pregunta 7: Dificultad para concentrarse en cosas tales como leer el periódico o ver la televisión.">
+              <div class="option"><input type="radio" id="q7-0" name="q7" value="0" required /><label for="q7-0">0 - Nunca</label></div>
+              <div class="option"><input type="radio" id="q7-1" name="q7" value="1" /><label for="q7-1">1 - Varios días</label></div>
+              <div class="option"><input type="radio" id="q7-2" name="q7" value="2" /><label for="q7-2">2 - Más de la mitad</label></div>
+              <div class="option"><input type="radio" id="q7-3" name="q7" value="3" /><label for="q7-3">3 - Casi todos los días</label></div>
+            </div>
+          </div>
+
+          <div class="question">
+            <div class="question-header">
+              <div class="question-number" aria-hidden="true">8</div>
+              <p class="question-text">¿Se ha movido o hablado tan lentamente que otras personas lo han notado? O por el contrario, ¿ha estado tan inquieto(a) o agitado(a) que se ha estado moviendo mucho más de lo normal?</p>
+            </div>
+            <div class="options" role="radiogroup" aria-label="Pregunta 8: ¿Se ha movido o hablado tan lentamente que otras personas lo han notado? O por el contrario, ¿ha estado tan inquieto(a) o agitado(a) que se ha estado moviendo mucho más de lo normal?">
+              <div class="option"><input type="radio" id="q8-0" name="q8" value="0" required /><label for="q8-0">0 - Nunca</label></div>
+              <div class="option"><input type="radio" id="q8-1" name="q8" value="1" /><label for="q8-1">1 - Varios días</label></div>
+              <div class="option"><input type="radio" id="q8-2" name="q8" value="2" /><label for="q8-2">2 - Más de la mitad</label></div>
+              <div class="option"><input type="radio" id="q8-3" name="q8" value="3" /><label for="q8-3">3 - Casi todos los días</label></div>
+            </div>
+          </div>
+
+          <div class="question">
+            <div class="question-header">
+              <div class="question-number" aria-hidden="true">9</div>
+              <p class="question-text">Pensamientos de que estaría mejor muerto(a) o de querer hacerse daño de alguna manera.</p>
+            </div>
+            <div class="options" role="radiogroup" aria-label="Pregunta 9: Pensamientos de que estaría mejor muerto(a) o de querer hacerse daño de alguna manera.">
+              <div class="option"><input type="radio" id="q9-0" name="q9" value="0" required /><label for="q9-0">0 - Nunca</label></div>
+              <div class="option"><input type="radio" id="q9-1" name="q9" value="1" /><label for="q9-1">1 - Varios días</label></div>
+              <div class="option"><input type="radio" id="q9-2" name="q9" value="2" /><label for="q9-2">2 - Más de la mitad</label></div>
+              <div class="option"><input type="radio" id="q9-3" name="q9" value="3" /><label for="q9-3">3 - Casi todos los días</label></div>
+            </div>
+          </div>
+
+          <div id="surveyMessage" class="status-message" aria-live="assertive">Debes responder todas las preguntas antes de enviar la encuesta.</div>
+
+          <div class="actions">
+            <button type="submit" class="btn btn-primary">Enviar encuesta</button>
+            <button type="button" id="resetButton" class="btn btn-secondary">Reiniciar encuesta</button>
+          </div>
+        </form>
+      </main>
+    </div>
+
+    <script>
+      const form = document.getElementById('surveyForm');
+      const progressFill = document.getElementById('progressFill');
+      const progressText = document.getElementById('progressText');
+      const surveyMessage = document.getElementById('surveyMessage');
+      const resetButton = document.getElementById('resetButton');
+
+      function updateProgress() {
+        const answered = document.querySelectorAll('input[type="radio"]:checked').length;
+        const percentage = Math.round((answered / 9) * 100);
+        progressFill.style.width = percentage + '%';
+        progressText.textContent = answered + '/9 respondidas';
+      }
+
+      function validateSurvey() {
+        return document.querySelectorAll('input[type="radio"]:checked').length === 9;
+      }
+
+      function getClassification(total) {
+        if (total <= 4) return { key: 'minimo', label: 'Mínimo / sin depresión' };
+        if (total <= 9) return { key: 'leve', label: 'Depresión leve' };
+        if (total <= 14) return { key: 'moderada', label: 'Depresión moderada' };
+        if (total <= 19) return { key: 'moderadamenteSevera', label: 'Depresión moderadamente severa' };
+        return { key: 'severa', label: 'Depresión severa' };
+      }
+
+      form.addEventListener('submit', function (event) {
+        event.preventDefault();
+
+        if (!validateSurvey()) {
+          surveyMessage.classList.add('visible');
+          return;
+        }
+
+        surveyMessage.classList.remove('visible');
+
+        const answers = [];
+        for (let i = 1; i <= 9; i += 1) {
+          const selected = form.elements['q' + i].value;
+          answers.push(Number(selected));
+        }
+
+        const total = answers.reduce((sum, value) => sum + value, 0);
+        const q9 = Number(form.elements.q9.value);
+        const classification = getClassification(total);
+
+        const result = {
+          total,
+          classification: classification.label,
+          level: classification.key,
+          q9,
+          fecha: new Date().toISOString()
+        };
+
+        localStorage.setItem('phq9Result', JSON.stringify(result));
+        window.location.href = 'resultado.html';
+      });
+
+      document.querySelectorAll('input[type="radio"]').forEach((radio) => {
+        radio.addEventListener('change', updateProgress);
+      });
+
+      resetButton.addEventListener('click', () => {
+        form.reset();
+        surveyMessage.classList.remove('visible');
+        updateProgress();
+      });
+
+      updateProgress();
+    </script>
+  </body>
+</html>

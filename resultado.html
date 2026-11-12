@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Resultado PHQ-9</title>
+    <style>
+      :root {
+        --navy: #0d1f3d;
+        --navy-deep: #09172d;
+        --green: #1d8f5f;
+        --green-deep: #146b49;
+        --green-soft: #ebf8f1;
+        --blue-soft: #edf4ff;
+        --gray-50: #f8fafc;
+        --gray-100: #eef3f7;
+        --gray-200: #dfe7ee;
+        --gray-500: #5d6d7b;
+        --gray-700: #2d3748;
+        --warning: #fef3c7;
+        --warning-text: #92400e;
+        --danger: #b42318;
+        --danger-soft: #fff1f2;
+        --shadow: 0 20px 45px rgba(8, 22, 43, 0.12);
+      }
+
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        min-height: 100vh;
+        font-family: Arial, Helvetica, sans-serif;
+        background:
+          radial-gradient(circle at top left, rgba(112, 146, 255, 0.18), transparent 26%),
+          radial-gradient(circle at bottom right, rgba(14, 38, 62, 0.7), transparent 32%),
+          linear-gradient(135deg, #030608 0%, #0c1118 20%, #0d1624 42%, #0a1d36 100%);
+        color: var(--gray-700);
+        line-height: 1.6;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 24px 16px 60px;
+      }
+
+      .topbar {
+        background: linear-gradient(135deg, rgba(9, 17, 28, 0.96) 0%, rgba(16, 31, 53, 0.94) 100%);
+        color: #fff;
+        border-radius: 22px;
+        padding: 20px 24px 16px;
+        box-shadow: 0 18px 40px rgba(0, 0, 0, 0.38);
+        border: 1px solid rgba(167, 188, 214, 0.18);
+      }
+
+      .topbar-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 16px;
+        flex-wrap: wrap;
+      }
+
+      .eyebrow {
+        margin: 0 0 8px;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        font-size: 0.74rem;
+        opacity: 0.8;
+        font-weight: 700;
+      }
+
+      h1 {
+        margin: 0;
+        font-size: clamp(1.9rem, 1.4rem + 1vw, 2.8rem);
+        line-height: 1.2;
+      }
+
+      .institution-badge {
+        min-width: 120px;
+        background: rgba(255,255,255,0.07);
+        border: 1px solid rgba(255,255,255,0.12);
+        border-radius: 14px;
+        text-align: center;
+        padding: 12px 14px;
+      }
+
+      .institution-badge strong {
+        display: block;
+        font-size: 1.3rem;
+        letter-spacing: 0.08em;
+      }
+
+      .institution-badge span {
+        display: block;
+        margin-top: 4px;
+        font-size: 0.72rem;
+        opacity: 0.8;
+      }
+
+      .meta-grid {
+        margin-top: 18px;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 12px;
+      }
+
+      .meta-item {
+        background: rgba(255,255,255,0.06);
+        border: 1px solid rgba(255,255,255,0.1);
+        border-radius: 12px;
+        padding: 12px 14px;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+      }
+
+      .meta-item span {
+        display: block;
+        font-size: 0.73rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        opacity: 0.8;
+      }
+
+      .meta-item strong {
+        display: block;
+        margin-top: 8px;
+        font-size: 0.96rem;
+        line-height: 1.5;
+      }
+
+      .team-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 6px;
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: 10px;
+        overflow: hidden;
+        table-layout: fixed;
+      }
+
+      .team-table th,
+      .team-table td {
+        text-align: left;
+        padding: 5px 8px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        vertical-align: middle;
+      }
+
+      .team-table thead th {
+        background: rgba(255, 255, 255, 0.08);
+        color: rgba(255, 255, 255, 0.95);
+        font-size: 0.62rem;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        padding-top: 7px;
+        padding-bottom: 7px;
+      }
+
+      .team-table tbody td {
+        color: rgba(255, 255, 255, 0.96);
+        font-size: 0.72rem;
+        line-height: 1.2;
+      }
+
+      .team-table tbody td:last-child {
+        width: 26%;
+        text-align: right;
+        white-space: nowrap;
+      }
+
+      .team-table tbody tr:last-child td {
+        border-bottom: none;
+      }
+
+      .card {
+        margin-top: 24px;
+        background: linear-gradient(180deg, rgba(15, 21, 32, 0.9), rgba(12, 18, 29, 0.92));
+        border: 1px solid rgba(167, 188, 214, 0.18);
+        border-radius: 22px;
+        box-shadow: 0 18px 42px rgba(0, 0, 0, 0.28);
+        padding: 24px;
+      }
+
+      .section-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+        flex-wrap: wrap;
+        margin-bottom: 18px;
+      }
+
+      h2 {
+        margin: 0;
+        color: var(--navy);
+        font-size: clamp(1.5rem, 1.2rem + 0.8vw, 2rem);
+      }
+
+      .score-card {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 16px;
+        flex-wrap: wrap;
+        border-radius: 18px;
+        padding: 20px 22px;
+        margin-bottom: 20px;
+        border-left: 8px solid var(--green);
+        background: var(--green-soft);
+      }
+
+      .score-card.minimo { background: #edf9f1; border-left-color: #0f7a4a; }
+      .score-card.leve { background: #eef6ff; border-left-color: #2563eb; }
+      .score-card.moderada { background: #fff7e8; border-left-color: #d97706; }
+      .score-card.moderadamenteSevera { background: #fff1f2; border-left-color: #dc2626; }
+      .score-card.severa { background: #fff0f0; border-left-color: #991b1b; }
+
+      .score-label {
+        font-size: 0.8rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        opacity: 0.82;
+        font-weight: 700;
+      }
+
+      .score-value {
+        font-size: clamp(2.3rem, 1.8rem + 1vw, 3.2rem);
+        font-weight: 800;
+        color: var(--navy);
+      }
+
+      .classification {
+        font-size: 1.18rem;
+        font-weight: 800;
+      }
+
+      .classification.minimo { color: #0f7a4a; }
+      .classification.leve { color: #2563eb; }
+      .classification.moderada { color: #a16207; }
+      .classification.moderadamenteSevera { color: #b91c1c; }
+      .classification.severa { color: #991b1b; }
+
+      .danger-alert {
+        display: none;
+        background: var(--danger-soft);
+        border: 1px solid rgba(180,35,24,0.2);
+        border-left: 6px solid var(--danger);
+        border-radius: 14px;
+        padding: 18px 20px;
+        margin: 18px 0 20px;
+      }
+
+      .danger-alert.visible { display: block; }
+
+      .danger-alert h3 {
+        margin: 0 0 8px;
+        color: var(--danger);
+      }
+
+      .danger-alert p { margin: 0 0 8px; }
+      .danger-alert a { color: var(--danger); font-weight: 700; }
+
+      .layout {
+        display: grid;
+        grid-template-columns: 1.15fr 0.85fr;
+        gap: 22px;
+      }
+
+      .panel {
+        background: rgba(255,255,255,0.8);
+        border: 1px solid rgba(13,31,61,0.08);
+        border-radius: 18px;
+        padding: 18px 16px;
+      }
+
+      .panel h3 {
+        margin: 0 0 12px;
+        color: var(--navy);
+        font-size: 1.2rem;
+      }
+
+      .tree {
+        display: grid;
+        gap: 12px;
+      }
+
+      .tree-row {
+        display: grid;
+        gap: 12px;
+      }
+
+      .tree-row.single { grid-template-columns: 1fr; }
+      .tree-row.double { grid-template-columns: repeat(2, minmax(180px, 1fr)); }
+      .tree-row.triple { grid-template-columns: repeat(3, minmax(150px, 1fr)); }
+
+      .node {
+        position: relative;
+        background: #f5f7fb;
+        border: 2px solid rgba(13,31,61,0.12);
+        border-radius: 12px;
+        min-height: 74px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        padding: 10px 12px;
+        font-weight: 700;
+        color: var(--gray-700);
+        transition: all 0.2s ease;
+      }
+
+      .node.active {
+        background: var(--green-soft);
+        border-color: var(--green);
+        color: var(--green-deep);
+        box-shadow: 0 0 0 2px rgba(29,143,95,0.1);
+      }
+
+      .tree-arrow {
+        text-align: center;
+        color: var(--green);
+        font-size: 1.5rem;
+        font-weight: 800;
+      }
+
+      .advice-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: grid;
+        gap: 12px;
+      }
+
+      .advice-list li {
+        background: var(--gray-50);
+        border: 1px solid rgba(13,31,61,0.08);
+        border-left: 5px solid var(--green);
+        border-radius: 10px;
+        padding: 12px 14px;
+      }
+
+      .disclaimer {
+        margin-top: 22px;
+        background: #edf4f8;
+        border-left: 5px solid var(--navy);
+        border-radius: 12px;
+        padding: 14px 16px;
+        font-weight: 700;
+        color: var(--navy);
+      }
+
+      .actions {
+        margin-top: 22px;
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+      }
+
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border: none;
+        border-radius: 12px;
+        padding: 14px 22px;
+        font-weight: 700;
+        font-size: 1rem;
+        cursor: pointer;
+        text-decoration: none;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+      }
+
+      .btn:hover, .btn:focus-visible { transform: translateY(-1px); }
+      .btn-primary {
+        background: linear-gradient(135deg, var(--green) 0%, var(--green-deep) 100%);
+        color: #fff;
+        box-shadow: 0 10px 20px rgba(29,143,95,0.2);
+      }
+      .btn-secondary {
+        background: linear-gradient(135deg, var(--navy) 0%, #183b62 100%);
+        color: #fff;
+        box-shadow: 0 10px 20px rgba(13,31,61,.18);
+      }
+
+      @media (max-width: 820px) {
+        .layout, .tree-row.double, .tree-row.triple { grid-template-columns: 1fr; }
+        .actions { flex-direction: column; align-items: stretch; }
+        .btn { width: 100%; }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <header class="topbar">
+        <div class="topbar-head">
+          <div>
+            <p class="eyebrow">Universidad Autónoma de Nuevo León</p>
+            <h1>Diagrama de Árbol de Decisión – Cuestionario PHQ-9</h1>
+          </div>
+          <div class="institution-badge" aria-label="Seminario de Sistemas">
+            <strong>SEM</strong>
+            <span>Seminario</span>
+          </div>
+        </div>
+
+        <div class="meta-grid">
+          <div class="meta-item">
+            <span>Facultad</span>
+            <strong>Facultad de Ingeniería Mecánica y Eléctrica</strong>
+          </div>
+          <div class="meta-item">
+            <span>Seminario</span>
+            <strong>Seminario de Sistemas</strong>
+          </div>
+          <div class="meta-item">
+            <span>Equipo</span>
+            <table class="team-table" aria-label="Integrantes del equipo">
+              <thead>
+                <tr>
+                  <th>Miembros del Equipo</th>
+                  <th>Matrícula</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td>Héctor Abiud Garza Torres</td><td>2104536</td></tr>
+                <tr><td>Jesús Alberto Cabrera García</td><td>2053522</td></tr>
+                <tr><td>Diego Ernesto Tristán González</td><td>2121582</td></tr>
+                <tr><td>Jesús Alejandro Vázquez Domínguez</td><td>2015101</td></tr>
+                <tr><td>Alberto Alexander Villegas Rodríguez</td><td>2173861</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="meta-item">
+            <span>Salón / Grupo</span>
+            <strong>4110 / 003 - Hora: M6</strong>
+          </div>
+        </div>
+      </header>
+
+      <main class="card">
+        <div class="section-head">
+          <h2>Resultado de la evaluación</h2>
+          <a href="encuesta.html" class="btn btn-secondary">Volver a la encuesta</a>
+        </div>
+
+        <div id="scoreCard" class="score-card minimo" aria-live="polite">
+          <div>
+            <div class="score-label">Puntaje total S</div>
+            <div id="scoreValue" class="score-value">0</div>
+          </div>
+          <div>
+            <div class="score-label">Clasificación</div>
+            <div id="classificationText" class="classification minimo">Mínimo / sin depresión</div>
+          </div>
+        </div>
+
+        <div id="riskAlert" class="danger-alert" role="alert">
+          <h3>Bandera de riesgo: requiere valoración clínica inmediata</h3>
+          <p>Su respuesta en la pregunta 9 indica la presencia de pensamientos relacionados con el riesgo de daño o ideación suicida. Es necesario que reciba una valoración de riesgo y atención clínica inmediata, con acompañamiento continuo y apoyo de su red cercana.</p>
+          <p>Contacte a la <strong>Línea de la Vida (México)</strong>: <a href="tel:8009112000">800 911 2000</a></p>
+        </div>
+
+        <div class="layout">
+          <section class="panel">
+            <h3>Diagrama de árbol de decisión</h3>
+            <div class="tree" aria-label="Diagrama de árbol de decisión con el camino recorrido resaltado">
+              <div class="tree-row single">
+                <div id="node-root" class="node active">¿S ≤ 14?</div>
+              </div>
+              <div class="tree-arrow" aria-hidden="true">↓</div>
+              <div class="tree-row double">
+                <div id="node-s14Left" class="node">Sí</div>
+                <div id="node-s14Right" class="node">No</div>
+              </div>
+              <div class="tree-arrow" aria-hidden="true">↓</div>
+              <div class="tree-row triple">
+                <div id="node-s9Left" class="node">¿S ≤ 9?</div>
+                <div id="node-s19" class="node">¿S ≤ 19?</div>
+                <div id="node-s9Right" class="node">-</div>
+              </div>
+              <div class="tree-arrow" aria-hidden="true">↓</div>
+              <div class="tree-row triple">
+                <div id="node-s4" class="node">¿S ≤ 4?</div>
+                <div id="node-ms" class="node">Depresión moderadamente severa</div>
+                <div id="node-sev" class="node">Depresión severa</div>
+              </div>
+              <div class="tree-arrow" aria-hidden="true">↓</div>
+              <div class="tree-row triple">
+                <div id="node-minimo" class="node">Mínimo / sin depresión</div>
+                <div id="node-leve" class="node">Depresión leve</div>
+                <div id="node-moderada" class="node">Depresión moderada</div>
+              </div>
+            </div>
+          </section>
+
+          <aside class="panel">
+            <h3>Acciones recomendadas</h3>
+            <ul id="adviceList" class="advice-list"></ul>
+          </aside>
+        </div>
+
+        <div class="disclaimer">Esta herramienta es solo con fines académicos y de orientación. No sustituye el diagnóstico de un profesional de la salud.</div>
+
+        <div class="actions">
+          <a href="encuesta.html" class="btn btn-primary">Realizar otra evaluación</a>
+          <a href="index.html" class="btn btn-secondary">Inicio</a>
+        </div>
+      </main>
+    </div>
+
+    <script>
+      const resultKey = 'phq9Result';
+      const scoreCard = document.getElementById('scoreCard');
+      const scoreValue = document.getElementById('scoreValue');
+      const classificationText = document.getElementById('classificationText');
+      const riskAlert = document.getElementById('riskAlert');
+      const adviceList = document.getElementById('adviceList');
+
+      const adviceByLevel = {
+        minimo: [
+          'Mantener hábitos saludables: sueño regular, actividad física y alimentación balanceada.',
+          'Practicar técnicas de manejo del estrés, como respiración consciente o pausas breves durante el día.',
+          'Priorizar rutinas estables y apoyar la salud emocional en la vida cotidiana.'
+        ],
+        leve: [
+          'Buscar apoyo social con amigos, familiares o personas de confianza.',
+          'Utilizar psicoeducación y estrategias de autocuidado para entender y monitorear los síntomas.',
+          'Incorporar ejercicio regular, meditación o mindfulness y realizar seguimiento periódico de la sintomatología.'
+        ],
+        moderada: [
+          'Iniciar psicoterapia, por ejemplo, terapia cognitivo-conductual con un profesional capacitado.',
+          'Consultar a un psicólogo o profesional de salud mental para una evaluación más profunda.',
+          'Fortalecer redes de apoyo y mantener comunicación con personas cercanas.'
+        ],
+        moderadamenteSevera: [
+          'Solicitar evaluación psiquiátrica para considerar tratamiento farmacológico combinado con psicoterapia.',
+          'Programar una interconsulta especializada con atención de salud mental.',
+          'Participar activamente en el acompañamiento de la red de apoyo familiar y social.'
+        ],
+        severa: [
+          'Requiere atención médica y psiquiátrica prioritaria e inmediata.',
+          'Considerar tratamiento farmacológico y psicoterapéutico intensivo, con seguimiento clínico cercano.',
+          'Involucrar de manera activa a la familia o cuidadores para apoyo continuo y observación.'
+        ]
+      };
+
+      function getLevelKey(total) {
+        if (total <= 4) return 'minimo';
+        if (total <= 9) return 'leve';
+        if (total <= 14) return 'moderada';
+        if (total <= 19) return 'moderadamenteSevera';
+        return 'severa';
+      }
+
+      function setAdvice(level) {
+        adviceList.innerHTML = '';
+        (adviceByLevel[level] || adviceByLevel.minimo).forEach((text) => {
+          const li = document.createElement('li');
+          li.textContent = text;
+          adviceList.appendChild(li);
+        });
+      }
+
+      function renderTree(total) {
+        const nodes = {
+          root: document.getElementById('node-root'),
+          s14Left: document.getElementById('node-s14Left'),
+          s14Right: document.getElementById('node-s14Right'),
+          s9Left: document.getElementById('node-s9Left'),
+          s19: document.getElementById('node-s19'),
+          s4: document.getElementById('node-s4'),
+          minimo: document.getElementById('node-minimo'),
+          leve: document.getElementById('node-leve'),
+          moderada: document.getElementById('node-moderada'),
+          ms: document.getElementById('node-ms'),
+          sev: document.getElementById('node-sev')
+        };
+
+        Object.values(nodes).forEach((node) => node.classList.remove('active'));
+        nodes.root.classList.add('active');
+
+        if (total <= 14) {
+          nodes.s14Left.classList.add('active');
+          if (total <= 9) {
+            nodes.s9Left.classList.add('active');
+            if (total <= 4) {
+              nodes.s4.classList.add('active');
+              nodes.minimo.classList.add('active');
+            } else {
+              nodes.s4.classList.add('active');
+              nodes.leve.classList.add('active');
+            }
+          } else {
+            nodes.moderada.classList.add('active');
+          }
+        } else {
+          nodes.s14Right.classList.add('active');
+          nodes.s19.classList.add('active');
+          if (total <= 19) {
+            nodes.ms.classList.add('active');
+          } else {
+            nodes.sev.classList.add('active');
+          }
+        }
+      }
+
+      function updateResult() {
+        const raw = localStorage.getItem(resultKey);
+        if (!raw) {
+          scoreValue.textContent = '-';
+          classificationText.textContent = 'Sin datos';
+          setAdvice('minimo');
+          return;
+        }
+
+        const result = JSON.parse(raw);
+        const total = Number(result.total || 0);
+        const level = getLevelKey(total);
+        const isRisk = Number(result.q9 || 0) > 0;
+
+        scoreValue.textContent = total;
+        classificationText.textContent = result.classification || 'Mínimo / sin depresión';
+        classificationText.classList.remove('minimo', 'leve', 'moderada', 'moderadamenteSevera', 'severa');
+        scoreCard.classList.remove('minimo', 'leve', 'moderada', 'moderadamenteSevera', 'severa');
+        scoreCard.classList.add(level);
+        classificationText.classList.add(level);
+
+        renderTree(total);
+        setAdvice(level);
+        riskAlert.classList.toggle('visible', isRisk);
+      }
+
+      updateResult();
+    </script>
+  </body>
+</html>
