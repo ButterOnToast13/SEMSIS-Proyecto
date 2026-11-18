@@ -672,6 +672,7 @@
           fecha: new Date().toISOString()
         };
 
+        localStorage.removeItem('phq9FollowUp');
         localStorage.setItem('phq9Result', JSON.stringify(result));
         window.location.href = 'resultado.html';
       });

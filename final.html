@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Resumen final de la evaluación</title>
+    <link rel="stylesheet" href="seguimiento.css" />
+  </head>
+  <body>
+    <div class="container">
+      <header class="topbar">
+        <p class="eyebrow">Cuestionario de seguimiento</p>
+        <h1>Resumen final de tu evaluación</h1>
+      </header>
+      <main class="card">
+        <section id="errorPanel" class="notice" role="alert" hidden>
+          <h2>No encontramos tus respuestas</h2>
+          <p id="errorMessage"></p>
+          <div class="actions">
+            <a href="encuesta.html" class="btn btn-primary">Realizar la encuesta</a>
+            <a href="index.html" class="btn btn-secondary">Inicio</a>
+          </div>
+        </section>
+
+        <section id="finalContent" hidden>
+          <p class="intro">Consulta el resultado de la encuesta inicial, una recomendación orientativa y tus respuestas de seguimiento.</p>
+
+          <section aria-labelledby="resultHeading">
+            <h2 id="resultHeading">Resultado de la encuesta inicial</h2>
+            <p><strong>Puntaje PHQ-9:</strong> <span id="scoreValue"></span> de 27</p>
+            <p><strong>Clasificación:</strong> <span id="classificationValue"></span></p>
+          </section>
+
+          <section id="riskAlert" class="danger-alert" role="alert" hidden>
+            <h3>Es importante buscar apoyo clínico</h3>
+            <p>La respuesta a la pregunta 9 señala pensamientos relacionados con hacerse daño o no querer vivir. Procura hablar ahora con una persona de confianza y buscar una valoración profesional. Si existe peligro inmediato, contacta a los servicios de emergencia de tu localidad.</p>
+            <p>En México puedes llamar a la <strong>Línea de la Vida</strong>: <a href="tel:8009112000">800 911 2000</a>.</p>
+          </section>
+
+          <section class="recommendation" aria-labelledby="recommendationHeading">
+            <h2 id="recommendationHeading">Recomendación orientativa</h2>
+            <div id="recommendationContent"></div>
+          </section>
+
+          <section aria-labelledby="followUpHeading">
+            <h2 id="followUpHeading">Tus respuestas de seguimiento</h2>
+            <ol id="answerList" class="answer-list"></ol>
+          </section>
+
+          <p class="disclaimer">Esta herramienta es solo con fines académicos y de orientación. El resultado no es un diagnóstico y no sustituye la atención de un profesional de la salud.</p>
+          <div class="actions">
+            <a href="encuesta.html" class="btn btn-primary">Realizar una nueva evaluación</a>
+            <a href="index.html" class="btn btn-secondary">Volver al inicio</a>
+          </div>
+          <section class="thanks-note" aria-labelledby="thanksHeading">
+            <h2 id="thanksHeading">¡Gracias por participar!</h2>
+            <p>Gracias por completar la encuesta y compartir tus respuestas. Tu participación nos ayuda con este proyecto académico.</p>
+          </section>
+        </section>
+      </main>
+    </div>
+    <script>
+      (function () {
+        const errorPanel = document.getElementById('errorPanel');
+        const errorMessage = document.getElementById('errorMessage');
+        const finalContent = document.getElementById('finalContent');
+
+        function showError(message) {
+          errorMessage.textContent = message;
+          errorPanel.hidden = false;
+        }
+
+        function getLevel(total) {
+          if (total <= 4) return { key: 'minimo', label: 'Mínimo / sin depresión' };
+          if (total <= 9) return { key: 'leve', label: 'Depresión leve' };
+          if (total <= 14) return { key: 'moderada', label: 'Depresión moderada' };
+          if (total <= 19) return { key: 'moderadamenteSevera', label: 'Depresión moderadamente severa' };
+          return { key: 'severa', label: 'Depresión severa' };
+        }
+
+        const recommendationByLevel = {
+          minimo: [
+            'El puntaje se encuentra en el rango mínimo de esta herramienta. Este resultado es orientativo y no confirma ni descarta por sí solo una condición de salud. Si te sientes bien, puedes mantener hábitos que apoyen tu bienestar: horarios regulares de sueño, alimentación suficiente, movimiento físico que disfrutes y pausas para descansar.',
+            'Procura conservar contacto con personas de confianza y reservar tiempo para actividades significativas. Si notas cambios en tu ánimo, interés, sueño o funcionamiento cotidiano que persisten o te preocupan, habla con alguien de confianza y considera consultar a un profesional de salud.'
+          ],
+          leve: [
+            'El puntaje sugiere que podrías estar experimentando algunas molestias emocionales. Intenta elegir pasos pequeños y realistas para los próximos días: mantener una rutina básica, cuidar el descanso, realizar algo de movimiento y apartar un momento para una actividad que normalmente disfrutas.',
+            'Compartir cómo te sientes con una persona de confianza puede ayudarte a no llevarlo en soledad. Si las molestias persisten, empeoran o interfieren con tus actividades, considera pedir orientación a un profesional de salud mental o a un servicio de salud. Un profesional podrá escuchar tu situación y recomendar opciones adecuadas para ti.'
+          ],
+          moderada: [
+            'El resultado hace recomendable solicitar una valoración con un psicólogo, médico u otro profesional de salud mental. Puedes comentar cuánto tiempo llevas sintiéndote así, qué actividades se han vuelto difíciles y qué apoyos tienes disponibles. El profesional podrá explorar contigo alternativas de atención y decidir los siguientes pasos.',
+            'Mientras organizas esa consulta, intenta mantener las necesidades básicas y una rutina sencilla, y considera pedir a alguien de confianza que te acompañe o te ayude a encontrar atención. No tienes que resolver todo de una vez; acordar un primer paso concreto puede hacer más fácil comenzar. Evita iniciar o suspender medicamentos sin indicación profesional.'
+          ],
+          moderadamenteSevera: [
+            'Por el nivel de resultado, es importante buscar atención profesional pronto y no dejarlo únicamente en estrategias de autocuidado. Contacta a un servicio de salud mental o a un médico para solicitar una valoración y conversar sobre las opciones de apoyo apropiadas para tu situación.',
+            'Pide a una persona de confianza que te acompañe, te ayude a solicitar la cita o esté pendiente de ti. Si te resulta difícil realizar tareas cotidianas, coméntalo al profesional y solicita apoyo práctico mientras recibes atención. Cualquier decisión sobre terapia o medicamentos debe tomarse con un profesional de salud.'
+          ],
+          severa: [
+            'Este resultado requiere atención clínica prioritaria. Busca ayuda profesional cuanto antes, contactando a un servicio de salud mental, a un médico o a un servicio de urgencias. Si puedes, dile ahora a una persona de confianza cómo te sientes y pídele que te acompañe; procura no afrontar esta situación sin apoyo.',
+            'Si sientes que podrías estar en peligro inmediato, acude a urgencias o contacta a los servicios de emergencia de tu localidad. En México también puedes llamar a la Línea de la Vida al 800 911 2000. Esta recomendación no sustituye una valoración clínica; un profesional puede ayudarte a definir el apoyo más adecuado. No inicies ni cambies medicamentos por cuenta propia.'
+          ]
+        };
+
+        let result;
+        let followUp;
+        try {
+          const resultRaw = localStorage.getItem('phq9Result');
+          const followUpRaw = localStorage.getItem('phq9FollowUp');
+          if (!resultRaw || !followUpRaw) {
+            showError('Completa la encuesta inicial y las siete preguntas de seguimiento para ver el resumen.');
+            return;
+          }
+          result = JSON.parse(resultRaw);
+          followUp = JSON.parse(followUpRaw);
+        } catch (error) {
+          showError('No fue posible leer los datos guardados. Vuelve a realizar la encuesta para generar un resumen nuevo.');
+          return;
+        }
+
+        const total = Number(result.total);
+        const level = Number.isInteger(total) && total >= 0 && total <= 27 ? getLevel(total) : null;
+        const q9 = Number(result.q9);
+        if (!level || !Number.isInteger(q9) || q9 < 0 || q9 > 3) {
+          showError('El resultado guardado no es válido. Vuelve a realizar la encuesta para generar un resumen nuevo.');
+          return;
+        }
+
+        if (followUp.level !== level.key || !Array.isArray(followUp.answers) || followUp.answers.length !== 7 ||
+            followUp.answers.some(function (item) {
+              return !item || typeof item.question !== 'string' || typeof item.answer !== 'string';
+            })) {
+          showError('Las respuestas de seguimiento no corresponden a este resultado o están incompletas. Vuelve a realizar la encuesta.');
+          return;
+        }
+
+        document.getElementById('scoreValue').textContent = String(total);
+        document.getElementById('classificationValue').textContent = level.label;
+        document.getElementById('riskAlert').hidden = q9 === 0;
+
+        const recommendationContent = document.getElementById('recommendationContent');
+        recommendationByLevel[level.key].forEach(function (text) {
+          const paragraph = document.createElement('p');
+          paragraph.textContent = text;
+          recommendationContent.appendChild(paragraph);
+        });
+
+        const answerList = document.getElementById('answerList');
+        followUp.answers.forEach(function (item) {
+          const listItem = document.createElement('li');
+          const question = document.createElement('strong');
+          const answer = document.createElement('span');
+          question.textContent = item.question;
+          answer.textContent = item.answer;
+          listItem.appendChild(question);
+          listItem.appendChild(answer);
+          answerList.appendChild(listItem);
+        });
+
+        finalContent.hidden = false;
+      })();
+    </script>
+  </body>
+</html>

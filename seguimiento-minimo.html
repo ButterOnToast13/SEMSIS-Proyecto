@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Seguimiento de bienestar</title>
+    <link rel="stylesheet" href="seguimiento.css" />
+  </head>
+  <body data-level="minimo">
+    <div class="container">
+      <header class="topbar">
+        <p class="eyebrow">Cuestionario de seguimiento</p>
+        <h1 id="followUpTitle">Seguimiento de bienestar</h1>
+      </header>
+      <main class="card">
+        <p id="followUpDescription" class="intro"></p>
+        <div id="pageMessage" class="notice" role="alert" hidden></div>
+        <form id="followUpForm" novalidate hidden>
+          <div class="progress-wrap" aria-live="polite" aria-atomic="true">
+            <div class="progress-meta"><span>Progreso</span><span id="progressText">0/7 respondidas</span></div>
+            <div class="progress-bar" aria-hidden="true"><div id="progressFill" class="progress-fill"></div></div>
+          </div>
+          <div id="questionList"></div>
+          <p class="disclaimer">Tus respuestas se guardan en este navegador para mostrarte el resumen final. Este cuestionario es de orientación y no sustituye una valoración profesional.</p>
+          <div id="statusMessage" class="status-message" role="alert" hidden></div>
+          <div class="actions">
+            <button type="submit" class="btn btn-primary">Enviar seguimiento</button>
+            <a href="resultado.html" class="btn btn-secondary">Volver al resultado</a>
+          </div>
+        </form>
+        <div class="actions"><a href="encuesta.html" class="btn btn-secondary">Ir a la encuesta</a><a href="index.html" class="btn btn-secondary">Inicio</a></div>
+      </main>
+    </div>
+    <script src="seguimiento.js"></script>
+  </body>
+</html>

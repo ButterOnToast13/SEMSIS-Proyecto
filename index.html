@@ -102,6 +102,26 @@
         opacity: 0.8;
       }
 
+      .consent-notice {
+        width: min(720px, 100%);
+        margin: 18px auto 0;
+        padding: 14px 18px;
+        background: #b42318;
+        border-color: rgba(255, 255, 255, 0.55);
+        box-shadow: 0 6px 18px rgba(180, 35, 24, 0.25);
+        text-align: center;
+      }
+
+      .consent-notice strong {
+        font-size: 0.95rem;
+        letter-spacing: 0.02em;
+      }
+
+      .consent-notice span {
+        font-size: 0.78rem;
+        opacity: 1;
+      }
+
       .meta-grid {
         margin-top: 18px;
         display: grid;
@@ -330,6 +350,10 @@
               <strong>SEM</strong>
               <span>Seminario de Sistemas</span>
             </div>
+          </div>
+          <div class="institution-badge consent-notice" aria-label="Consentimiento informado">
+            <strong>Consentimiento informado</strong>
+            <span>Tu participación es voluntaria y con fines académicos. Las respuestas son anónimas.</span>
           </div>
 
           <div class="meta-grid">
