@@ -194,7 +194,7 @@
 
       h2 {
         margin: 0;
-        color: var(--navy);
+        color: #eaf2ff;
         font-size: clamp(1.5rem, 1.2rem + 0.8vw, 2rem);
       }
 
@@ -261,6 +261,24 @@
 
       .danger-alert p { margin: 0 0 8px; }
       .danger-alert a { color: var(--danger); font-weight: 700; }
+
+      .recommendation {
+        margin: 18px 0 20px;
+        background: rgba(255,255,255,0.92);
+        border: 1px solid rgba(13,31,61,0.12);
+        border-left: 6px solid var(--green);
+        border-radius: 14px;
+        padding: 16px 18px;
+        color: var(--gray-700);
+      }
+
+      .recommendation h3 {
+        margin: 0 0 6px;
+        color: var(--navy);
+        font-size: 1.05rem;
+      }
+
+      .recommendation p { margin: 0; }
 
       .layout {
         display: grid;
@@ -411,7 +429,7 @@
             <strong>Facultad de Ingeniería Mecánica y Eléctrica</strong>
           </div>
           <div class="meta-item">
-            <span>Seminario</span>
+            <span>Materia</span>
             <strong>Seminario de Sistemas</strong>
           </div>
           <div class="meta-item">
@@ -461,6 +479,11 @@
           <p>Su respuesta en la pregunta 9 indica la presencia de pensamientos relacionados con el riesgo de daño o ideación suicida. Es necesario que reciba una valoración de riesgo y atención clínica inmediata, con acompañamiento continuo y apoyo de su red cercana.</p>
           <p>Contacte a la <strong>Línea de la Vida (México)</strong>: <a href="tel:8009112000">800 911 2000</a></p>
         </div>
+
+        <section id="recommendation" class="recommendation" aria-live="polite">
+          <h3 id="recommendationTitle">Recomendación para mejorar</h3>
+          <p id="recommendationText"></p>
+        </section>
 
         <div class="layout">
           <section class="panel">
@@ -517,6 +540,15 @@
       const classificationText = document.getElementById('classificationText');
       const riskAlert = document.getElementById('riskAlert');
       const adviceList = document.getElementById('adviceList');
+      const recommendationText = document.getElementById('recommendationText');
+
+      const recommendationByLevel = {
+        minimo: 'Para mantener este estado, conserva rutinas de sueño regulares, realiza actividad física con frecuencia, aliméntate de manera balanceada y practica momentos de descanso o respiración consciente durante el día.',
+        leve: 'Para mejorar gradualmente, procura mantener contacto con personas de confianza, organiza una rutina diaria realista y dedica tiempo a ejercicio, descanso y actividades que te generen bienestar. Si los síntomas persisten, considera acudir a orientación psicológica.',
+        moderada: 'Te recomendamos solicitar una evaluación con un psicólogo o profesional de salud mental y comenzar a trabajar en los factores que afectan tu estado emocional. Mantén una red de apoyo cercana y evita enfrentar la situación en aislamiento.',
+        moderadamenteSevera: 'Es importante que busques atención especializada de manera pronta. Un profesional podrá valorar si necesitas psicoterapia, seguimiento médico o tratamiento combinado; pide apoyo a familiares o personas de confianza para asistir contigo.',
+        severa: 'Tu resultado requiere atención clínica prioritaria e inmediata. Comunícate con un médico o psiquiatra y busca ayuda presencial urgente. No permanezcas solo/a y involucra a familiares o cuidadores en tu acompañamiento.'
+      };
 
       const adviceByLevel = {
         minimo: [
@@ -561,6 +593,7 @@
           li.textContent = text;
           adviceList.appendChild(li);
         });
+        recommendationText.textContent = recommendationByLevel[level] || recommendationByLevel.minimo;
       }
 
       function renderTree(total) {
@@ -612,13 +645,34 @@
           scoreValue.textContent = '-';
           classificationText.textContent = 'Sin datos';
           setAdvice('minimo');
+          recommendationText.textContent = 'Complete la encuesta para ver recomendaciones personalizadas.';
           return;
         }
 
-        const result = JSON.parse(raw);
-        const total = Number(result.total || 0);
+        let result;
+        try {
+          result = JSON.parse(raw);
+        } catch (error) {
+          localStorage.removeItem(resultKey);
+          scoreValue.textContent = '-';
+          classificationText.textContent = 'Datos no válidos';
+          setAdvice('minimo');
+          recommendationText.textContent = 'Los datos guardados no son válidos. Complete nuevamente la encuesta.';
+          return;
+        }
+
+        const parsedTotal = Number(result.total);
+        if (!Number.isInteger(parsedTotal) || parsedTotal < 0 || parsedTotal > 27) {
+          scoreValue.textContent = '-';
+          classificationText.textContent = 'Datos no válidos';
+          setAdvice('minimo');
+          recommendationText.textContent = 'El puntaje guardado no es válido. Complete nuevamente la encuesta.';
+          return;
+        }
+
+        const total = parsedTotal;
         const level = getLevelKey(total);
-        const isRisk = Number(result.q9 || 0) > 0;
+        const isRisk = Number(result.q9) > 0;
 
         scoreValue.textContent = total;
         classificationText.textContent = result.classification || 'Mínimo / sin depresión';
@@ -630,6 +684,9 @@
         renderTree(total);
         setAdvice(level);
         riskAlert.classList.toggle('visible', isRisk);
+
+        // Actualizar recomendación personalizada
+        recommendationText.textContent = recommendationByLevel[level] || '';
       }
 
       updateResult();

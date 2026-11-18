@@ -194,7 +194,7 @@
 
       h2 {
         margin: 0;
-        color: var(--navy);
+        color: #eaf2ff;
         font-size: clamp(1.5rem, 1.2rem + 0.8vw, 2rem);
       }
 
@@ -241,7 +241,7 @@
         align-items: center;
         gap: 8px;
         font-weight: 700;
-        color: var(--navy);
+        color: #eaf2ff;
       }
 
       .progress-bar {
@@ -429,7 +429,7 @@
             <strong>Facultad de Ingeniería Mecánica y Eléctrica</strong>
           </div>
           <div class="meta-item">
-            <span>Seminario</span>
+            <span>Materia</span>
             <strong>Seminario de Sistemas</strong>
           </div>
           <div class="meta-item">
@@ -655,6 +655,13 @@
 
         const total = answers.reduce((sum, value) => sum + value, 0);
         const q9 = Number(form.elements.q9.value);
+
+        if (answers.some((value) => !Number.isInteger(value) || value < 0 || value > 3)) {
+          surveyMessage.textContent = 'Una o más respuestas no son válidas. Seleccione una opción nuevamente.';
+          surveyMessage.classList.add('visible');
+          return;
+        }
+
         const classification = getClassification(total);
 
         const result = {
