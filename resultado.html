@@ -344,6 +344,93 @@
         font-weight: 800;
       }
 
+      .decision-map {
+        display: grid;
+        gap: 12px;
+      }
+
+      .decision-root,
+      .decision-condition,
+      .decision-leaf {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        border: 2px solid rgba(13,31,61,0.12);
+        border-radius: 12px;
+        background: #f5f7fb;
+        color: var(--gray-700);
+        font-weight: 800;
+      }
+
+      .decision-root {
+        min-height: 62px;
+        background: var(--navy);
+        color: #fff;
+        border-color: var(--navy);
+      }
+
+      .decision-branches {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+      }
+
+      .decision-column {
+        display: grid;
+        align-content: start;
+        gap: 10px;
+        min-width: 0;
+      }
+
+      .decision-condition {
+        min-height: 52px;
+        border-style: dashed;
+      }
+
+      .decision-results {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 10px;
+      }
+
+      .decision-column.high .decision-results {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .decision-leaf {
+        min-height: 76px;
+        padding: 9px 8px;
+        font-size: 0.86rem;
+      }
+
+      .decision-root.active,
+      .decision-condition.active,
+      .decision-leaf.active {
+        background: var(--green-soft);
+        border-color: var(--green);
+        color: var(--green-deep);
+        box-shadow: 0 0 0 3px rgba(29,143,95,0.12);
+      }
+
+      .decision-legend {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 10px;
+        color: var(--gray-500);
+        font-size: 0.82rem;
+        font-weight: 700;
+      }
+
+      .decision-legend span {
+        width: 14px;
+        height: 14px;
+        border-radius: 4px;
+        background: var(--green-soft);
+        border: 2px solid var(--green);
+      }
+
       .advice-list {
         list-style: none;
         padding: 0;
@@ -405,6 +492,9 @@
 
       @media (max-width: 820px) {
         .layout, .tree-row.double, .tree-row.triple { grid-template-columns: 1fr; }
+        .decision-branches,
+        .decision-results,
+        .decision-column.high .decision-results { grid-template-columns: 1fr; }
         .actions { flex-direction: column; align-items: stretch; }
         .btn { width: 100%; }
       }
@@ -489,32 +579,25 @@
         <div class="layout">
           <section class="panel">
             <h3>Diagrama de árbol de decisión</h3>
-            <div class="tree" aria-label="Diagrama de árbol de decisión con el camino recorrido resaltado">
-              <div class="tree-row single">
-                <div id="node-root" class="node active">¿S ≤ 14?</div>
-              </div>
-              <div class="tree-arrow" aria-hidden="true">↓</div>
-              <div class="tree-row double">
-                <div id="node-s14Left" class="node">Sí</div>
-                <div id="node-s14Right" class="node">No</div>
-              </div>
-              <div class="tree-arrow" aria-hidden="true">↓</div>
-              <div class="tree-row triple">
-                <div id="node-s9Left" class="node">¿S ≤ 9?</div>
-                <div id="node-s19" class="node">¿S ≤ 19?</div>
-                <div id="node-s9Right" class="node">-</div>
-              </div>
-              <div class="tree-arrow" aria-hidden="true">↓</div>
-              <div class="tree-row triple">
-                <div id="node-s4" class="node">¿S ≤ 4?</div>
-                <div id="node-ms" class="node">Depresión moderadamente severa</div>
-                <div id="node-sev" class="node">Depresión severa</div>
-              </div>
-              <div class="tree-arrow" aria-hidden="true">↓</div>
-              <div class="tree-row triple">
-                <div id="node-minimo" class="node">Mínimo / sin depresión</div>
-                <div id="node-leve" class="node">Depresión leve</div>
-                <div id="node-moderada" class="node">Depresión moderada</div>
+            <div class="decision-legend"><span aria-hidden="true"></span> Camino resaltado según tu puntaje</div>
+            <div class="decision-map" aria-label="Diagrama ramificado del puntaje PHQ-9">
+              <div id="node-root" class="decision-root active">Puntaje total PHQ-9: 0 a 27</div>
+              <div class="decision-branches">
+                <div class="decision-column low">
+                  <div id="node-low" class="decision-condition">Puntajes bajos: 0–14</div>
+                  <div class="decision-results">
+                    <div id="node-minimo" class="decision-leaf">0–4<br>Sin depresión / mínimo</div>
+                    <div id="node-leve" class="decision-leaf">5–9<br>Depresión leve</div>
+                    <div id="node-moderada" class="decision-leaf">10–14<br>Depresión moderada</div>
+                  </div>
+                </div>
+                <div class="decision-column high">
+                  <div id="node-high" class="decision-condition">Puntajes elevados: 15–27</div>
+                  <div class="decision-results">
+                    <div id="node-ms" class="decision-leaf">15–19<br>Moderadamente severa</div>
+                    <div id="node-sev" class="decision-leaf">20–27<br>Depresión severa</div>
+                  </div>
+                </div>
               </div>
             </div>
           </section>
@@ -609,11 +692,8 @@
       function renderTree(total) {
         const nodes = {
           root: document.getElementById('node-root'),
-          s14Left: document.getElementById('node-s14Left'),
-          s14Right: document.getElementById('node-s14Right'),
-          s9Left: document.getElementById('node-s9Left'),
-          s19: document.getElementById('node-s19'),
-          s4: document.getElementById('node-s4'),
+          low: document.getElementById('node-low'),
+          high: document.getElementById('node-high'),
           minimo: document.getElementById('node-minimo'),
           leve: document.getElementById('node-leve'),
           moderada: document.getElementById('node-moderada'),
@@ -625,27 +705,14 @@
         nodes.root.classList.add('active');
 
         if (total <= 14) {
-          nodes.s14Left.classList.add('active');
-          if (total <= 9) {
-            nodes.s9Left.classList.add('active');
-            if (total <= 4) {
-              nodes.s4.classList.add('active');
-              nodes.minimo.classList.add('active');
-            } else {
-              nodes.s4.classList.add('active');
-              nodes.leve.classList.add('active');
-            }
-          } else {
-            nodes.moderada.classList.add('active');
-          }
+          nodes.low.classList.add('active');
+          if (total <= 4) nodes.minimo.classList.add('active');
+          else if (total <= 9) nodes.leve.classList.add('active');
+          else nodes.moderada.classList.add('active');
         } else {
-          nodes.s14Right.classList.add('active');
-          nodes.s19.classList.add('active');
-          if (total <= 19) {
-            nodes.ms.classList.add('active');
-          } else {
-            nodes.sev.classList.add('active');
-          }
+          nodes.high.classList.add('active');
+          if (total <= 19) nodes.ms.classList.add('active');
+          else nodes.sev.classList.add('active');
         }
       }
 

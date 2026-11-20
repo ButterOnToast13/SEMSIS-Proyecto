@@ -25,10 +25,18 @@
         <section id="finalContent" hidden>
           <p class="intro">Consulta el resultado de la encuesta inicial, una recomendación orientativa y tus respuestas de seguimiento.</p>
 
-          <section aria-labelledby="resultHeading">
-            <h2 id="resultHeading">Resultado de la encuesta inicial</h2>
-            <p><strong>Puntaje PHQ-9:</strong> <span id="scoreValue"></span> de 27</p>
-            <p><strong>Clasificación:</strong> <span id="classificationValue"></span></p>
+          <section id="resultSummary" class="result-summary" aria-labelledby="resultHeading">
+            <div class="result-summary-main">
+              <p class="result-kicker">Tu resultado PHQ-9</p>
+              <h2 id="resultHeading">Clasificación</h2>
+              <p id="classificationValue" class="classification-value"></p>
+              <p id="resultMeaning" class="result-meaning"></p>
+            </div>
+            <div class="score-display" aria-label="Puntaje obtenido">
+              <span>Puntaje</span>
+              <strong id="scoreValue">0</strong>
+              <small>de 27</small>
+            </div>
           </section>
 
           <section id="riskAlert" class="danger-alert" role="alert" hidden>
@@ -45,6 +53,32 @@
           <section aria-labelledby="followUpHeading">
             <h2 id="followUpHeading">Tus respuestas de seguimiento</h2>
             <ol id="answerList" class="answer-list"></ol>
+          </section>
+
+          <section class="decision-section" aria-labelledby="decisionHeading">
+            <h2 id="decisionHeading">Diagrama completo del proceso de decisión</h2>
+            <p>Este mapa muestra todas las clasificaciones posibles y destaca la rama correspondiente a tu puntaje PHQ-9.</p>
+            <div class="decision-legend"><span aria-hidden="true"></span> Ruta de tu resultado</div>
+            <div class="decision-map-final" aria-label="Diagrama completo de clasificación PHQ-9">
+              <div id="finalNodeRoot" class="final-root active">Puntaje total PHQ-9 (0–27)</div>
+              <div class="final-branches">
+                <div class="final-column low">
+                  <div id="finalNodeLow" class="final-condition">Puntaje de 0 a 14</div>
+                  <div class="final-results">
+                    <div id="finalNodeMinimo" class="final-leaf">0–4<br>Sin depresión / mínimo</div>
+                    <div id="finalNodeLeve" class="final-leaf">5–9<br>Depresión leve</div>
+                    <div id="finalNodeModerada" class="final-leaf">10–14<br>Depresión moderada</div>
+                  </div>
+                </div>
+                <div class="final-column high">
+                  <div id="finalNodeHigh" class="final-condition">Puntaje de 15 a 27</div>
+                  <div class="final-results">
+                    <div id="finalNodeModeradamenteSevera" class="final-leaf">15–19<br>Depresión moderadamente severa</div>
+                    <div id="finalNodeSevera" class="final-leaf">20–27<br>Depresión severa</div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </section>
 
           <p class="disclaimer">Esta herramienta es solo con fines académicos y de orientación. El resultado no es un diagnóstico y no sustituye la atención de un profesional de la salud.</p>
@@ -135,6 +169,17 @@
 
         document.getElementById('scoreValue').textContent = String(total);
         document.getElementById('classificationValue').textContent = level.label;
+        const resultSummary = document.getElementById('resultSummary');
+        resultSummary.className = 'result-summary ' + level.key;
+
+        const resultMeaningByLevel = {
+          minimo: 'Rango mínimo: 0 a 4 puntos',
+          leve: 'Rango leve: 5 a 9 puntos',
+          moderada: 'Rango moderado: 10 a 14 puntos',
+          moderadamenteSevera: 'Rango moderadamente severo: 15 a 19 puntos',
+          severa: 'Rango severo: 20 a 27 puntos'
+        };
+        document.getElementById('resultMeaning').textContent = resultMeaningByLevel[level.key];
         document.getElementById('riskAlert').hidden = q9 === 0;
 
         const recommendationContent = document.getElementById('recommendationContent');
@@ -155,6 +200,23 @@
           listItem.appendChild(answer);
           answerList.appendChild(listItem);
         });
+
+        const finalNodes = {
+          low: document.getElementById('finalNodeLow'),
+          high: document.getElementById('finalNodeHigh'),
+          minimo: document.getElementById('finalNodeMinimo'),
+          leve: document.getElementById('finalNodeLeve'),
+          moderada: document.getElementById('finalNodeModerada'),
+          moderadamenteSevera: document.getElementById('finalNodeModeradamenteSevera'),
+          severa: document.getElementById('finalNodeSevera')
+        };
+
+        if (level.key === 'minimo' || level.key === 'leve' || level.key === 'moderada') {
+          finalNodes.low.classList.add('active');
+        } else {
+          finalNodes.high.classList.add('active');
+        }
+        finalNodes[level.key].classList.add('active');
 
         finalContent.hidden = false;
       })();
