@@ -5,6 +5,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Resumen final de la evaluación</title>
     <link rel="stylesheet" href="seguimiento.css" />
+    <style>
+      .resource-list {
+        margin: 0;
+        padding-left: 22px;
+        color: #d3deeb;
+      }
+
+      .resource-list li {
+        margin-bottom: 12px;
+      }
+
+      .resource-list a {
+        color: #bfdbfe;
+        font-weight: 700;
+      }
+
+      .resource-list a:focus-visible {
+        outline: 3px solid #fef3c7;
+        outline-offset: 3px;
+      }
+    </style>
   </head>
   <body>
     <div class="container">
@@ -50,34 +71,63 @@
             <div id="recommendationContent"></div>
           </section>
 
+          <section class="recommendation" aria-labelledby="resourcesHeading">
+            <h2 id="resourcesHeading">Fuentes confiables para informarte</h2>
+            <ul class="resource-list">
+              <li>
+                <a href="https://psicologia.uanl.mx/" target="_blank" rel="noopener noreferrer">Facultad de Psicología de la Universidad Autónoma de Nuevo León</a>.
+                Consulta su sitio oficial y sus canales de contacto para conocer la información y opciones vigentes.
+              </li>
+              <li>
+                <a href="https://www.imss.gob.mx/salud-en-linea/salud-mental" target="_blank" rel="noopener noreferrer">IMSS: Salud Mental</a>.
+                Material informativo sobre bienestar emocional y salud mental.
+              </li>
+              <li>
+                <a href="https://www.gob.mx/lineadelavida" target="_blank" rel="noopener noreferrer">Línea de la Vida</a>.
+                Información y orientación sobre salud mental; en México también puedes llamar al <a href="tel:8009112000">800 911 2000</a>.
+              </li>
+            </ul>
+          </section>
+
           <section aria-labelledby="followUpHeading">
             <h2 id="followUpHeading">Tus respuestas de seguimiento</h2>
             <ol id="answerList" class="answer-list"></ol>
           </section>
 
+          <section id="secondFollowUpSection" aria-labelledby="secondFollowUpHeading" hidden>
+            <h2 id="secondFollowUpHeading">Tus respuestas del segundo seguimiento</h2>
+            <ol id="secondAnswerList" class="answer-list"></ol>
+          </section>
+
           <section class="decision-section" aria-labelledby="decisionHeading">
-            <h2 id="decisionHeading">Diagrama completo del proceso de decisión</h2>
-            <p>Este mapa muestra todas las clasificaciones posibles y destaca la rama correspondiente a tu puntaje PHQ-9.</p>
+            <h2 id="decisionHeading">Árbol de decisión y seguimientos</h2>
+            <p>El puntaje determina la clasificación. Todos los resultados completan siete preguntas de seguimiento; los niveles moderado, moderadamente severo y severo continúan con tres preguntas adicionales antes del resumen final.</p>
             <div class="decision-legend"><span aria-hidden="true"></span> Ruta de tu resultado</div>
-            <div class="decision-map-final" aria-label="Diagrama completo de clasificación PHQ-9">
+            <div class="decision-map-final" aria-label="Árbol de decisión PHQ-9 y etapas de seguimiento">
               <div id="finalNodeRoot" class="final-root active">Puntaje total PHQ-9 (0–27)</div>
               <div class="final-branches">
                 <div class="final-column low">
                   <div id="finalNodeLow" class="final-condition">Puntaje de 0 a 14</div>
                   <div class="final-results">
-                    <div id="finalNodeMinimo" class="final-leaf">0–4<br>Sin depresión / mínimo</div>
-                    <div id="finalNodeLeve" class="final-leaf">5–9<br>Depresión leve</div>
-                    <div id="finalNodeModerada" class="final-leaf">10–14<br>Depresión moderada</div>
+                    <div id="finalNodeMinimo" class="final-leaf">0–4<br>Sin depresión / mínimo<br>7 preguntas</div>
+                    <div id="finalNodeLeve" class="final-leaf">5–9<br>Depresión leve<br>7 preguntas</div>
+                    <div id="finalNodeModerada" class="final-leaf">10–14<br>Depresión moderada<br>7 + 3 preguntas</div>
                   </div>
                 </div>
                 <div class="final-column high">
                   <div id="finalNodeHigh" class="final-condition">Puntaje de 15 a 27</div>
                   <div class="final-results">
-                    <div id="finalNodeModeradamenteSevera" class="final-leaf">15–19<br>Depresión moderadamente severa</div>
-                    <div id="finalNodeSevera" class="final-leaf">20–27<br>Depresión severa</div>
+                    <div id="finalNodeModeradamenteSevera" class="final-leaf">15–19<br>Depresión moderadamente severa<br>7 + 3 preguntas</div>
+                    <div id="finalNodeSevera" class="final-leaf">20–27<br>Depresión severa<br>7 + 3 preguntas</div>
                   </div>
                 </div>
               </div>
+              <div id="finalNodeFollowUp1" class="final-condition">Seguimiento inicial<br>7 preguntas para todos los resultados</div>
+              <div class="final-branches">
+                <div id="finalNodeDirectToSummary" class="final-leaf">Mínimo o leve<br>Continúa al resumen final</div>
+                <div id="finalNodeFollowUp2" class="final-leaf">Moderado, moderadamente severo o severo<br>Segundo seguimiento<br>3 preguntas sobre el lugar físico identificado</div>
+              </div>
+              <div id="finalNodeSummary" class="final-root">Resumen final</div>
             </div>
           </section>
 
@@ -127,7 +177,7 @@
           ],
           moderadamenteSevera: [
             'Por el nivel de resultado, es importante buscar atención profesional pronto y no dejarlo únicamente en estrategias de autocuidado. Contacta a un servicio de salud mental o a un médico para solicitar una valoración y conversar sobre las opciones de apoyo apropiadas para tu situación.',
-            'Pide a una persona de confianza que te acompañe, te ayude a solicitar la cita o esté pendiente de ti. Si te resulta difícil realizar tareas cotidianas, coméntalo al profesional y solicita apoyo práctico mientras recibes atención. Cualquier decisión sobre terapia o medicamentos debe tomarse con un profesional de salud.'
+            'Pide a una persona de confianza que te acompañe, te ayude a contactar un servicio de salud o esté pendiente de ti. Si te resulta difícil realizar tareas cotidianas, coméntalo al profesional y solicita apoyo práctico mientras recibes atención. Cualquier decisión sobre terapia o medicamentos debe tomarse con un profesional de salud.'
           ],
           severa: [
             'Este resultado requiere atención clínica prioritaria. Busca ayuda profesional cuanto antes, contactando a un servicio de salud mental, a un médico o a un servicio de urgencias. Si puedes, dile ahora a una persona de confianza cómo te sientes y pídele que te acompañe; procura no afrontar esta situación sin apoyo.',
@@ -141,7 +191,7 @@
           const resultRaw = localStorage.getItem('phq9Result');
           const followUpRaw = localStorage.getItem('phq9FollowUp');
           if (!resultRaw || !followUpRaw) {
-            showError('Completa la encuesta inicial y las siete preguntas de seguimiento para ver el resumen.');
+            showError('Completa la encuesta inicial y las preguntas de seguimiento para ver el resumen.');
             return;
           }
           result = JSON.parse(resultRaw);
@@ -159,8 +209,14 @@
           return;
         }
 
+        const needsSecondFollowUp = ['moderada', 'moderadamenteSevera', 'severa'].indexOf(level.key) !== -1;
+        const secondAnswers = Array.isArray(followUp.secondAnswers) ? followUp.secondAnswers : [];
         if (followUp.level !== level.key || !Array.isArray(followUp.answers) || followUp.answers.length !== 7 ||
             followUp.answers.some(function (item) {
+              return !item || typeof item.question !== 'string' || typeof item.answer !== 'string';
+            }) || (needsSecondFollowUp && secondAnswers.length !== 3) ||
+            (!needsSecondFollowUp && secondAnswers.length !== 0) ||
+            secondAnswers.some(function (item) {
               return !item || typeof item.question !== 'string' || typeof item.answer !== 'string';
             })) {
           showError('Las respuestas de seguimiento no corresponden a este resultado o están incompletas. Vuelve a realizar la encuesta.');
@@ -189,6 +245,59 @@
           recommendationContent.appendChild(paragraph);
         });
 
+        if (needsSecondFollowUp) {
+          const locationTextByAnswer = {
+            'Casa': 'casa',
+            'Escuela o facultad': 'la escuela o facultad',
+            'Trabajo': 'el trabajo',
+            'Traslados o espacios públicos': 'los traslados o espacios públicos',
+            'Varios lugares o no identifico uno': 'varios lugares o todavía no tienes claro cuál',
+            'Escuela, facultad o trabajo': 'la escuela, facultad o el trabajo',
+            'Estudio o trabajo': 'el estudio o el trabajo',
+            'Familia o relaciones': 'la familia o las relaciones',
+            'Salud o cambios personales': 'la salud o los cambios personales',
+            'No identifico un ámbito': 'un ámbito que no identificaste con claridad'
+          };
+          const situationTextByAnswer = {
+            'Aumentan las tareas o responsabilidades': 'el aumento de tareas o responsabilidades',
+            'Ocurre un conflicto o una interacción difícil': 'un conflicto o una interacción difícil',
+            'El ruido, la aglomeración o la falta de privacidad me afectan': 'el ruido, la aglomeración o la falta de privacidad',
+            'No noto un detonante claro': 'no haber identificado un detonante claro',
+            'Se acumulan tareas o exigencias': 'la acumulación de tareas o exigencias',
+            'Tengo conflictos o interacciones difíciles': 'los conflictos o las interacciones difíciles',
+            'El entorno se siente ruidoso, aglomerado o poco privado': 'el ruido, la aglomeración o la falta de privacidad',
+            'Varias situaciones a la vez': 'varias situaciones a la vez',
+            'Tengo un conflicto o una interacción difícil': 'un conflicto o una interacción difícil',
+            'El entorno se siente poco seguro o impredecible': 'la sensación de inseguridad o de imprevisibilidad en el entorno',
+            'Me cuesta atender mis necesidades o salir de ahí': 'la dificultad para atender tus necesidades o salir de ese lugar',
+            'No puedo identificarlo ahora': 'no haber identificado un factor concreto por ahora'
+          };
+          const supportTextByAnswer = {
+            'Tener un espacio tranquilo para hacer una pausa': 'tener un espacio tranquilo para hacer una pausa',
+            'Contar con apoyo de alguien de confianza': 'contar con el apoyo de alguien de confianza',
+            'Ajustar tareas o responsabilidades': 'ajustar tareas o responsabilidades',
+            'Recibir orientación profesional': 'recibir orientación profesional',
+            'Tener acceso a un espacio más tranquilo': 'tener acceso a un espacio más tranquilo',
+            'Pedir apoyo a una persona de confianza': 'pedir apoyo a una persona de confianza',
+            'Acordar cambios en tareas o responsabilidades': 'acordar cambios en tareas o responsabilidades',
+            'Hablar con un profesional de salud': 'hablar con un profesional de salud',
+            'Una persona de confianza que pueda acompañarme': 'contar con el acompañamiento de una persona de confianza',
+            'Un profesional o servicio de salud': 'contactar a un profesional o servicio de salud',
+            'Un servicio de emergencia si hay peligro inmediato': 'contactar a un servicio de emergencia si hay peligro inmediato',
+            'Necesito que alguien me ayude a encontrar apoyo': 'pedir ayuda a alguien para encontrar apoyo'
+          };
+          const locationAnswer = followUp.answers[1].answer;
+          const situationAnswer = secondAnswers[0].answer;
+          const supportAnswer = secondAnswers[2].answer;
+          const recommendationContext = document.createElement('p');
+          recommendationContext.textContent = 'Tus respuestas indican que las dificultades se presentan principalmente en ' +
+            (locationTextByAnswer[locationAnswer] || 'el lugar que identificaste') +
+            '. Un factor que señalaste es ' + (situationTextByAnswer[situationAnswer] || 'la situación que describiste') +
+            '. Como apoyo, podría servirte ' + (supportTextByAnswer[supportAnswer] || 'explorar alternativas con alguien de confianza') +
+            '. Puedes conversar sobre estas opciones con una persona de confianza o un profesional de salud para encontrar apoyos concretos y seguros para ese entorno.';
+          recommendationContent.appendChild(recommendationContext);
+        }
+
         const answerList = document.getElementById('answerList');
         followUp.answers.forEach(function (item) {
           const listItem = document.createElement('li');
@@ -201,6 +310,21 @@
           answerList.appendChild(listItem);
         });
 
+        if (secondAnswers.length > 0) {
+          const secondAnswerList = document.getElementById('secondAnswerList');
+          secondAnswers.forEach(function (item) {
+            const listItem = document.createElement('li');
+            const question = document.createElement('strong');
+            const answer = document.createElement('span');
+            question.textContent = item.question;
+            answer.textContent = item.answer;
+            listItem.appendChild(question);
+            listItem.appendChild(answer);
+            secondAnswerList.appendChild(listItem);
+          });
+          document.getElementById('secondFollowUpSection').hidden = false;
+        }
+
         const finalNodes = {
           low: document.getElementById('finalNodeLow'),
           high: document.getElementById('finalNodeHigh'),
@@ -208,7 +332,11 @@
           leve: document.getElementById('finalNodeLeve'),
           moderada: document.getElementById('finalNodeModerada'),
           moderadamenteSevera: document.getElementById('finalNodeModeradamenteSevera'),
-          severa: document.getElementById('finalNodeSevera')
+          severa: document.getElementById('finalNodeSevera'),
+          followUp1: document.getElementById('finalNodeFollowUp1'),
+          directToSummary: document.getElementById('finalNodeDirectToSummary'),
+          followUp2: document.getElementById('finalNodeFollowUp2'),
+          summary: document.getElementById('finalNodeSummary')
         };
 
         if (level.key === 'minimo' || level.key === 'leve' || level.key === 'moderada') {
@@ -217,6 +345,9 @@
           finalNodes.high.classList.add('active');
         }
         finalNodes[level.key].classList.add('active');
+        finalNodes.followUp1.classList.add('active');
+        finalNodes.summary.classList.add('active');
+        finalNodes[needsSecondFollowUp ? 'followUp2' : 'directToSummary'].classList.add('active');
 
         finalContent.hidden = false;
       })();

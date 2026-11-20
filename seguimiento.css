@@ -378,10 +378,10 @@ h2 { margin: 0 0 10px; }
 .final-root.active,
 .final-condition.active,
 .final-leaf.active {
-  background: #e7f7ef;
-  border-color: #1d8f5f;
-  color: #146b49;
-  box-shadow: 0 0 0 4px rgba(29, 143, 95, 0.14);
+  background: #fef3c7;
+  border-color: #b45309;
+  color: #713f12;
+  box-shadow: 0 0 0 4px rgba(180, 83, 9, 0.25);
 }
 
 .decision-legend {
@@ -397,9 +397,9 @@ h2 { margin: 0 0 10px; }
 .decision-legend span {
   width: 16px;
   height: 16px;
-  border: 2px solid #1d8f5f;
+  border: 2px solid #b45309;
   border-radius: 4px;
-  background: #e7f7ef;
+  background: #fef3c7;
 }
 
 @media (max-width: 600px) {

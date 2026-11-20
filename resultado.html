@@ -281,6 +281,22 @@
 
       .recommendation p { margin: 0; }
 
+      .preliminary-notice {
+        margin: 0 0 18px;
+        padding: 14px 16px;
+        border-left: 6px solid var(--navy);
+        border-radius: 12px;
+        color: var(--navy);
+        background: var(--blue-soft);
+      }
+
+      .preliminary-notice h3 {
+        margin: 0 0 6px;
+        color: var(--navy);
+      }
+
+      .preliminary-notice p { margin: 0; }
+
       .layout {
         display: grid;
         grid-template-columns: 1.15fr 0.85fr;
@@ -331,10 +347,10 @@
       }
 
       .node.active {
-        background: var(--green-soft);
-        border-color: var(--green);
-        color: var(--green-deep);
-        box-shadow: 0 0 0 2px rgba(29,143,95,0.1);
+        background: #fef3c7;
+        border-color: #b45309;
+        color: #713f12;
+        box-shadow: 0 0 0 4px rgba(180,83,9,0.25);
       }
 
       .tree-arrow {
@@ -407,10 +423,10 @@
       .decision-root.active,
       .decision-condition.active,
       .decision-leaf.active {
-        background: var(--green-soft);
-        border-color: var(--green);
-        color: var(--green-deep);
-        box-shadow: 0 0 0 3px rgba(29,143,95,0.12);
+        background: #fef3c7;
+        border-color: #b45309;
+        color: #713f12;
+        box-shadow: 0 0 0 4px rgba(180,83,9,0.25);
       }
 
       .decision-legend {
@@ -427,8 +443,8 @@
         width: 14px;
         height: 14px;
         border-radius: 4px;
-        background: var(--green-soft);
-        border: 2px solid var(--green);
+        background: #fef3c7;
+        border: 2px solid #b45309;
       }
 
       .advice-list {
@@ -508,10 +524,6 @@
             <p class="eyebrow">Universidad Autónoma de Nuevo León</p>
             <h1>Diagrama de Árbol de Decisión – Cuestionario PHQ-9</h1>
           </div>
-          <div class="institution-badge" aria-label="Seminario de Sistemas">
-            <strong>SEM</strong>
-            <span>Seminario</span>
-          </div>
         </div>
 
         <div class="meta-grid">
@@ -550,13 +562,18 @@
 
       <main class="card">
         <div class="section-head">
-          <h2>Resultado de la evaluación</h2>
+          <h2>Resultado preliminar de la evaluación</h2>
           <a href="encuesta.html" class="btn btn-secondary">Volver a la encuesta</a>
         </div>
 
+        <aside id="preliminaryNotice" class="preliminary-notice" role="note" hidden>
+          <h3>Este resultado es preliminar</h3>
+          <p>Se basa solo en tus respuestas al cuestionario inicial; la evaluación todavía continúa. Selecciona “Continuar con el seguimiento” y responde las preguntas indicadas. Al completar las etapas de seguimiento podrás consultar el resumen final.</p>
+        </aside>
+
         <div id="scoreCard" class="score-card minimo" aria-live="polite">
           <div>
-            <div class="score-label">Puntaje total S</div>
+            <div class="score-label">Puntaje total</div>
             <div id="scoreValue" class="score-value">0</div>
           </div>
           <div>
@@ -627,6 +644,7 @@
       const adviceList = document.getElementById('adviceList');
       const recommendationText = document.getElementById('recommendationText');
       const followUpBtn = document.getElementById('followUpBtn');
+      const preliminaryNotice = document.getElementById('preliminaryNotice');
       const followUpPageByLevel = {
         minimo: 'seguimiento-minimo.html',
         leve: 'seguimiento-leve.html',
@@ -645,29 +663,24 @@
 
       const adviceByLevel = {
         minimo: [
-          'Mantener hábitos saludables: sueño regular, actividad física y alimentación balanceada.',
-          'Practicar técnicas de manejo del estrés, como respiración consciente o pausas breves durante el día.',
-          'Priorizar rutinas estables y apoyar la salud emocional en la vida cotidiana.'
+          'Mantén rutinas realistas de sueño, alimentación y actividad física.',
+          'Reserva tiempo para descansar y realizar actividades que disfrutas.'
         ],
         leve: [
-          'Buscar apoyo social con amigos, familiares o personas de confianza.',
-          'Utilizar psicoeducación y estrategias de autocuidado para entender y monitorear los síntomas.',
-          'Incorporar ejercicio regular, meditación o mindfulness y realizar seguimiento periódico de la sintomatología.'
+          'Comparte cómo te sientes con alguien de confianza.',
+          'Mantén una rutina de autocuidado y observa si las molestias persisten o interfieren con tus actividades.'
         ],
         moderada: [
-          'Iniciar psicoterapia, por ejemplo, terapia cognitivo-conductual con un profesional capacitado.',
-          'Consultar a un psicólogo o profesional de salud mental para una evaluación más profunda.',
-          'Fortalecer redes de apoyo y mantener comunicación con personas cercanas.'
+          'Solicita una valoración con un psicólogo o profesional de salud mental.',
+          'Pide apoyo a alguien de confianza mientras exploras opciones de atención.'
         ],
         moderadamenteSevera: [
-          'Solicitar evaluación psiquiátrica para considerar tratamiento farmacológico combinado con psicoterapia.',
-          'Programar una interconsulta especializada con atención de salud mental.',
-          'Participar activamente en el acompañamiento de la red de apoyo familiar y social.'
+          'Busca atención profesional pronto para conversar sobre opciones adecuadas para ti.',
+          'Pide acompañamiento a una persona de confianza mientras accedes a apoyo.'
         ],
         severa: [
-          'Requiere atención médica y psiquiátrica prioritaria e inmediata.',
-          'Considerar tratamiento farmacológico y psicoterapéutico intensivo, con seguimiento clínico cercano.',
-          'Involucrar de manera activa a la familia o cuidadores para apoyo continuo y observación.'
+          'Busca atención clínica prioritaria; si hay peligro inmediato, acude a urgencias o llama a emergencias.',
+          'Contacta ahora a una persona de confianza y pídele que te acompañe.'
         ]
       };
 
@@ -753,6 +766,7 @@
         const total = parsedTotal;
         const level = getLevelKey(total);
         const isRisk = Number(result.q9) > 0;
+        preliminaryNotice.hidden = false;
         followUpBtn.href = followUpPageByLevel[level];
         followUpBtn.hidden = false;
 
